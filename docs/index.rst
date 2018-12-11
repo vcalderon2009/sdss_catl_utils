@@ -24,8 +24,8 @@ Getting Started
     :maxdepth: 1
 
     install
-    importing_sdss_catl_utils
-    whatsnew/0.1
+    .. importing_sdss_catl_utils
+    .. whatsnew/0.1
 
 .. _user_doc:
 
@@ -39,7 +39,7 @@ Downloading data
 .. toctree::
     :maxdepth: 1
 
-    downloading/downloading_catls
+    .. downloading/downloading_catls
 
 .. _project-details:
 
