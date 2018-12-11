@@ -1,11 +1,10 @@
-Repository for SDSS DR7 catalogues package
-------------------------------------------
+|Astropy| |Travis_Build| |Issues| |RTD| |License|
 
-.. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
-    :target: http://www.astropy.org
-    :alt: Powered by Astropy Badge
+SDSS_Catl_Utils - Utilities for SDSS Catalogues
+------------------------------------------------
 
-
+Repository for handling the catalogues used in Calderon et al. (2018)
+for the SDSS DR7 group galaxy catalogues.
 
 
 License
@@ -17,35 +16,34 @@ the `Astropy package template <https://github.com/astropy/package-template>`_
 which is licensed under the BSD 3-clause licence. See the licenses folder for
 more information.
 
+.. |Astropy| image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
+    :target: http://www.astropy.org
+    :alt: Powered by Astropy Badge
 
-Contributing
-------------
+.. .. |Release| image:: https://img.shields.io/github/release/vcalderon2009/cosmo_utils.svg
+..    :target: https://github.com/vcalderon2009/cosmo_utils/releases/latest
+..    :alt: Latest Release
 
-We love contributions! sdss_catl_utils is open source,
-built on open source, and we'd love to have you hang out in our community.
+.. .. |PyPI| image:: https://img.shields.io/pypi/v/cosmo-utils.svg
+..    :target: https://pypi.python.org/pypi/cosmo-utils
+..    :alt: PyPI Release
 
-**Imposter syndrome disclaimer**: We want your help. No, really.
+.. |Travis_Build| image:: https://travis-ci.org/vcalderon2009/sdss_catl_utils.svg?branch=master
+   :target: https://travis-ci.org/vcalderon2009/sdss_catl_utils
+   :alt: Build Status
 
-There may be a little voice inside your head that is telling you that you're not
-ready to be an open source contributor; that your skills aren't nearly good
-enough to contribute. What could you possibly offer a project like this one?
+.. |Issues| image:: https://img.shields.io/github/issues/vcalderon2009/sdss_catl_utils.svg
+   :target: https://github.com/vcalderon2009/sdss_catl_utils/issues
+   :alt: Open Issues
 
-We assure you - the little voice in your head is wrong. If you can write code at
-all, you can contribute code to open source. Contributing to open source
-projects is a fantastic way to advance one's coding skills. Writing perfect code
-isn't the measure of a good developer (that would disqualify all of us!); it's
-trying to create something, making mistakes, and learning from those
-mistakes. That's how we all improve, and we are happy to help others learn.
+.. |RTD| image:: https://readthedocs.org/projects/sdss-catls-utils/badge/?version=latest
+   :target: https://sdss-catls-utils.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
-Being an open source contributor doesn't just mean writing code, either. You can
-help out by writing documentation, tests, or even giving feedback about the
-project (and yes - that includes giving feedback about the contribution
-process). Some of these contributions may be the most valuable to the project as
-a whole, because you're coming to the project with fresh eyes, so you can see
-the errors and assumptions that seasoned contributors have glossed over.
+.. |Coverage| image:: https://coveralls.io/repos/github/vcalderon2009/sdss_catl_utils/badge.svg?branch=master
+   :target: https://coveralls.io/github/vcalderon2009/sdss_catl_utils?branch=master
+   :alt: Coveralls Status
 
-*This disclaimer was originally written by
-`Adrienne Lowe <https://github.com/adriennefriend>`_ for a
-`PyCon talk <https://www.youtube.com/watch?v=6Uj746j9Heo>`_, and was adapted by
-sdss_catl_utils based on its use in the README file for the
-`MetPy project <https://github.com/Unidata/MetPy>`_.*
+.. |License| image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
+   :target: https://opensource.org/licenses/BSD-3-Clause
+   :alt: Project License 

@@ -1,14 +1,20 @@
 name: sdss_catl_utils
 
 channels:
-    - astropy
+  - astropy
+  - conda-forge
 
 dependencies:
-    - python>=3.6
-    - astropy
-    - Cython
-    - matplotlib
-    - numpy
-    - sphinx-astropy
-#   - pip:
-#       - dependency_from_pip
+  - python>=3.6
+  - astropy
+  - Cython
+  - matplotlib
+  - numpy
+  - h5py
+  - pandas
+  - scipy
+  - scikit-learn>=0.19.1
+  - sphinx-astropy
+  - pip:
+    - GitPython
+    - cosmo-utils
