@@ -83,8 +83,8 @@ matrix:
           env: SETUP_CMD='test'
 
         # Do a coverage test.
-        - os: linux
-          env: SETUP_CMD='test --coverage'
+        # - os: linux
+        #   env: SETUP_CMD='test --coverage'
 
         # Check for sphinx doc build warnings - we do this first because it
         # may run for a long time
@@ -104,8 +104,8 @@ matrix:
         # versions of Python, we can vary Python and Numpy versions at the same
         # time.
 
-        - os: linux
-          env: PYTHON_VERSION=3.5 NUMPY_VERSION=1.12
+        # - os: linux
+        #   env: PYTHON_VERSION=3.5 NUMPY_VERSION=1.12
         - os: linux
           env: PYTHON_VERSION=3.6 NUMPY_VERSION=1.13
         - os: linux
