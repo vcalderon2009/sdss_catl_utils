@@ -14,6 +14,13 @@ sudo: false
 #
 # https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
 
+notifications:
+  email:
+    recipients:
+      - victor.calderon90@gmail.com
+    on_success: change
+    on_failure: always
+
 addons:
     apt:
         packages:
@@ -37,19 +44,19 @@ env:
         
         # List runtime dependencies for the package that are available as conda
         # packages here.
-        - CONDA_DEPENDENCIES=''
+        - CONDA_DEPENDENCIES='cython scipy h5py pandas requests scikit-learn xgboost'
         - CONDA_DEPENDENCIES_DOC='sphinx-astropy'
         
         # List other runtime dependencies for the package that are available as
         # pip packages here.
-        - PIP_DEPENDENCIES=''
+        - PIP_DEPENDENCIES='cosmo-utils GitPython wget beautifulsoup4 tqdm'
 
         # Conda packages for affiliated packages are hosted in channel
         # "astropy" while builds for astropy LTS with recent numpy versions
         # are in astropy-ci-extras. If your package uses either of these,
         # add the channels to CONDA_CHANNELS along with any other channels
         # you want to use.
-        - CONDA_CHANNELS='astropy-ci-extras astropy'
+        - CONDA_CHANNELS='astropy-ci-extras astropy conda-forge'
 
         # If there are matplotlib or other GUI tests, uncomment the following
         # line to use the X virtual framebuffer.
@@ -150,4 +157,4 @@ script:
 after_success:
     # If coveralls.io is set up for this package, uncomment the line below.
     # The coveragerc file may be customized as needed for your package.
-    # - if [[ $SETUP_CMD == *coverage* ]]; then coveralls --rcfile='sdss_catl_utils/tests/coveragerc'; fi
+    - if [[ $SETUP_CMD == *coverage* ]]; then coveralls --rcfile='sdss_catl_utils/tests/coveragerc'; fi
