@@ -1,4 +1,4 @@
-0.0.0 (unreleased)
+0.0.1 (2018-12-11)
 -----------------------
 
-- No changes yet.
+- Initial release
