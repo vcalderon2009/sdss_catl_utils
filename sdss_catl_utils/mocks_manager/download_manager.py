@@ -34,3 +34,8 @@ class DownloadManager(object):
         ""
         ""
         self.A = 'A'
+
+    def create_new(self):
+        """
+        """
+        print("This is a test")

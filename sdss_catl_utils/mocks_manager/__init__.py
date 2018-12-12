@@ -11,4 +11,4 @@ from __future__ import (absolute_import, division, print_function,
 
 import os
 
-from .download_manager import DownloadManager
+from sdss_catl_utils.mocks_manager.download_manager import DownloadManager
