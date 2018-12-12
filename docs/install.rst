@@ -4,9 +4,11 @@
 Package Installation
 ********************
 
-To install ``SDSS_Catl_Utils``, you can use ``pip`` or clone the
-repository from Github and build from source code.
-
+Ther are different ways to install ``SDSS_Catl_Utils``. The preferred way
+to install it is through `pip <https://pypi.org/>`_. Another possibility
+is to install the package through the source code by cloning
+the repository from `Github <https://github.com/vcalderon2009/sdss_catl_utils>`_ 
+and build from the source code.
 
 ``pip`` Installation
 ====================
@@ -14,7 +16,7 @@ repository from Github and build from source code.
 The simplest way to install ``SDSS_Catl_Utils`` is with ``pip``.
 To install it with `pip`
 
-.. code-block:: shell
+.. code-block:: bash
 
     pip install sdss_catl_utils
 
@@ -89,8 +91,8 @@ and check that the version number matches what you expect:
 
 .. code-block:: python
 
-    import sdss_catl_utils
-    print(sdss_catl_utils.__version__)
+    >>> import sdss_catl_utils
+    >>> print(sdss_catl_utils.__version__)
 
 If the version number is not what it should be, this likely means you have a 
 previous installation that is superseding the version you tried to install.
@@ -101,8 +103,8 @@ location as follows:
 
 .. code-block:: python
 
-    import sdss_catl_utils
-    print(sdss_catl_utils.__file__)
+    >>> import sdss_catl_utils
+    >>> print(sdss_catl_utils.__file__)
 
 This wil show where your active version is located on your machine. You 
 can manually delete this copy of ``SDSS_Catl_Utils`` prior to your new

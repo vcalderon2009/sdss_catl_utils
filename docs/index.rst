@@ -1,64 +1,62 @@
-.. _documentation:
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |License|
 
-*************
-Documentation
-*************
+.. _main_docs:
 
-The ``SDSS_Catl_Utils`` package contains key functionality and common
-tools needed for performing astronomy and astrophysics using the
-``galaxy`` and ``group galaxy`` catalogues from Calderon et al. (2018).
+******************************
+SDSS_Catl_Utils Documentation
+******************************
+
+``SDSS_Catl_Utils`` is a specialized python package for downloading and
+analyzing catalogues of galaxies and dark matter haloes. The core
+functionality of the package includes:
+
+* Easy interface to download desired galaxy catalogues from **Calderon et al. (2019)**
+* A modular, object-oriented framework for handling the galaxy catalogues.
+* End-to-end support for reducing galaxy catalogues and caching them as fast-loading hdf5 files.
 
 The source code is freely available at
 `https://github.com/vcalderon2009/sdss_catl_utils <https://github.com/vcalderon2009/sdss_catl_utils>`_ 
 
-|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |License|
+.. _main_getting_started:
 
-
-.. _getting_started:
-
-***************
+===============
 Getting Started
-***************
+===============
 
 .. toctree::
     :maxdepth: 1
 
     install
     importing_sdss_catl_utils
+    quickstart_and_tutorials/index
+
+
+===============
+What's New?
+===============
+
+.. toctree::
+    :maxdepth: 1
+
     whatsnew/0.0.1
-
-.. _user_doc:
-
-******************
-User Documentation
-******************
-
-Downloading data
-================
-
-.. toctree::
-    :maxdepth: 1
-
-    downloading/downloading_catls
-
-.. _project-details:
-
-***************
-Project details
-***************
-
-.. toctree::
-    :maxdepth: 1
-
     whatsnew/index
+    changelog
+
+===============
+Project Details
+===============
+
+.. toctree::
+    :maxdepth: 1
+
     credits
     license
     ./full_ref_api/sdss_catl_utils_full_api.rst
     sdss_catl_utils/index
 
-*********
+===============
 Reference
-*********
+===============
 
 * :ref:`genindex`
 * :ref:`modindex`
