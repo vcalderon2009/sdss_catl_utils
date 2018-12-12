@@ -92,7 +92,7 @@ and check that the version number matches what you expect:
 .. code-block:: python
 
     >>> import sdss_catl_utils
-    >>> print(sdss_catl_utils.__version__)
+    >>> print(sdss_catl_utils.__version__) # doctest: +SKIP
 
 If the version number is not what it should be, this likely means you have a 
 previous installation that is superseding the version you tried to install.
@@ -104,7 +104,7 @@ location as follows:
 .. code-block:: python
 
     >>> import sdss_catl_utils
-    >>> print(sdss_catl_utils.__file__)
+    >>> print(sdss_catl_utils.__file__) # doctest: +SKIP
 
 This wil show where your active version is located on your machine. You 
 can manually delete this copy of ``SDSS_Catl_Utils`` prior to your new
