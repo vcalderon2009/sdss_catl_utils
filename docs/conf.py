@@ -108,8 +108,8 @@ release = package.__version__
 
 
 html_theme_options = {
-    'logotext1': 'sdss_catl_utils',  # white,  semi-bold
-    'logotext2': '',  # orange, light
+    'logotext1': 'sdss',  # white,  semi-bold
+    'logotext2': 'catl_utils',  # orange, light
     'logotext3': ':docs'   # white,  light
     }
 

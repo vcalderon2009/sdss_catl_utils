@@ -6,12 +6,12 @@ Documentation
 
 The ``SDSS_Catl_Utils`` package contains key functionality and common
 tools needed for performing astronomy and astrophysics using the
-`galaxy` and `group galaxy` catalogues from Calderon et al. (2018).
+``galaxy`` and ``group galaxy`` catalogues from Calderon et al. (2018).
 
 The source code is freely available at
 `https://github.com/vcalderon2009/sdss_catl_utils <https://github.com/vcalderon2009/sdss_catl_utils>`_ 
 
-|Astropy| |Travis_Build| |Issues| |RTD| |License|
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |License|
 
 
 .. _getting_started:
@@ -24,8 +24,8 @@ Getting Started
     :maxdepth: 1
 
     install
-    .. importing_sdss_catl_utils
-    .. whatsnew/0.1
+    importing_sdss_catl_utils
+    whatsnew/0.0.1
 
 .. _user_doc:
 
@@ -39,7 +39,7 @@ Downloading data
 .. toctree::
     :maxdepth: 1
 
-    .. downloading/downloading_catls
+    downloading/downloading_catls
 
 .. _project-details:
 
@@ -53,17 +53,16 @@ Project details
     whatsnew/index
     credits
     license
+    ./full_ref_api/sdss_catl_utils_full_api.rst
+    sdss_catl_utils/index
 
 *********
 Reference
 *********
 
-.. toctree::
-    :maxdepth: 1
-
-    * :ref:`genindex`
-    * :ref:`modindex`
-    * :ref:`search`
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 
 .. Links
@@ -72,13 +71,13 @@ Reference
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
-.. .. |Release| image:: https://img.shields.io/github/release/vcalderon2009/cosmo_utils.svg
-..    :target: https://github.com/vcalderon2009/cosmo_utils/releases/latest
-..    :alt: Latest Release
+.. |Release| image:: https://img.shields.io/github/release/vcalderon2009/sdss_catl_utils.svg
+   :target: https://github.com/vcalderon2009/sdss_catl_utils/releases/latest
+   :alt: Latest Release
 
-.. .. |PyPI| image:: https://img.shields.io/pypi/v/cosmo-utils.svg
-..    :target: https://pypi.python.org/pypi/cosmo-utils
-..    :alt: PyPI Release
+.. |PyPI| image:: https://img.shields.io/pypi/v/sdss-catl-utils.svg
+   :target: https://pypi.python.org/pypi/sdss-catl-utils
+   :alt: PyPI Release
 
 .. |Travis_Build| image:: https://travis-ci.org/vcalderon2009/sdss_catl_utils.svg?branch=master
    :target: https://travis-ci.org/vcalderon2009/sdss_catl_utils

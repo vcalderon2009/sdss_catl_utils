@@ -1,11 +1,10 @@
-|Astropy| |Travis_Build| |Issues| |RTD| |License|
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |License|
 
 SDSS_Catl_Utils - Utilities for SDSS Catalogues
 ------------------------------------------------
 
 Repository for handling the catalogues used in Calderon et al. (2018)
 for the SDSS DR7 group galaxy catalogues.
-
 
 License
 -------
@@ -20,13 +19,13 @@ more information.
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
-.. .. |Release| image:: https://img.shields.io/github/release/vcalderon2009/cosmo_utils.svg
-..    :target: https://github.com/vcalderon2009/cosmo_utils/releases/latest
-..    :alt: Latest Release
+.. |Release| image:: https://img.shields.io/github/release/vcalderon2009/sdss_catl_utils.svg
+   :target: https://github.com/vcalderon2009/sdss_catl_utils/releases/latest
+   :alt: Latest Release
 
-.. .. |PyPI| image:: https://img.shields.io/pypi/v/cosmo-utils.svg
-..    :target: https://pypi.python.org/pypi/cosmo-utils
-..    :alt: PyPI Release
+.. |PyPI| image:: https://img.shields.io/pypi/v/sdss-catl-utils.svg
+   :target: https://pypi.python.org/pypi/sdss-catl-utils
+   :alt: PyPI Release
 
 .. |Travis_Build| image:: https://travis-ci.org/vcalderon2009/sdss_catl_utils.svg?branch=master
    :target: https://travis-ci.org/vcalderon2009/sdss_catl_utils

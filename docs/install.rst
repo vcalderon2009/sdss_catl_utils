@@ -12,7 +12,9 @@ repository from Github and build from source code.
 ====================
 
 The simplest way to install ``SDSS_Catl_Utils`` is with ``pip``.
-To install it with `pip` ::
+To install it with `pip`
+
+.. code-block:: shell
 
     pip install sdss_catl_utils
 
