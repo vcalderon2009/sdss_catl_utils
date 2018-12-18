@@ -3,7 +3,7 @@
 
 # Victor Calderon
 # Created      : 2018_12-12
-# Last Modified: 2018_12-12
+# Last Modified: 2018_12-18
 # Vanderbilt University
 from __future__ import absolute_import, division, print_function 
 __author__     = ['Victor Calderon']
@@ -12,18 +12,11 @@ __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
 __all__        = [  'DownloadManager']
 
-import os
-import sys
-import git
-import numpy as np
 
-from cosmo_utils       import mock_catalogues as cm
-from cosmo_utils       import utils           as cu
+import os
 from cosmo_utils.utils import file_utils      as cfutils
-from cosmo_utils.utils import file_readers    as cfreaders
 from cosmo_utils.utils import work_paths      as cwpaths
 from cosmo_utils.utils import web_utils       as cweb
-from cosmo_utils.mock_catalogues import catls_utils as cmcu
 
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
 
@@ -118,6 +111,11 @@ class DownloadManager(object):
             it downloads the catalogues with group-finding errors
             included. This variable is set to ``False`` by default.
 
+        environ_name : `str`
+            Name of the environment variable to assign to ``outdir``.
+            This variable is set to the default ``environ_name`` from
+            `~sdss_catl_utils.mocks_manager.mocks_default`
+
         Examples
         ----------
 
@@ -136,9 +134,54 @@ class DownloadManager(object):
         self.cosmo_choice = kwargs.get('cosmo_choice', md.cosmo_choice)
         self.perf_opt     = kwargs.get('perf_opt', md.perf_opt)
         self.remove_files = kwargs.get('remove_files', md.remove_files)
+        self.environ_name = kwargs.get('environ_name', md.environ_name)
         # Other variables
         self.sample_Mr    = 'Mr{0}'.format(self.sample)
         self.sample_s     = str(self.sample)
+
+    # Writes the location of catalogues as environment variable
+    def _environ_variable_write(self, outdir):
+        """
+        Writes the location of catalogues as environment variable
+
+        Parameters
+        ------------
+        outdir : `str`
+            Path to the output directory, to which catalogues can be saved
+            and stored.
+        """
+        # Bashrc and bash_profile location
+        bashrc_path = os.path.expanduser('~/.bashrc')
+        bash_profile_path = os.path.expanduser('~/.bash_profile')
+        # Checking if files exist
+        if os.path.exists(bashrc_path):
+            conf_file = bashrc_path
+        elif os.path.exists(bash_profile):
+            conf_file = bash_profile
+        else:
+            conf_file = bashrc_file
+            open(conf_file, 'a').close()
+            print('`bashrc` file created: `{0}`'.format(bashrc_path))
+            cfutils.File_Exists(conf_file)
+        ##
+        ## Checking that ``outdir`` exists
+        assert(os.path.exists(outdir))
+        # Appending to ``conf_file`` file if necessary
+        if not os.environ.get(self.environ_name):
+            with open(conf_file, 'a') as outfile:
+                # String for exporting environment variable
+                export_str = 'export {0}={1}'.format(   self.environ_name,
+                                                        outdir)
+                # Appending to file
+                outfile.write('\n\n')
+                outfile.write('## Output directory for SDSS Catalogues\n')
+                outfile.write(export_str)
+                outfile.write('\n\n')
+                # Printing out message
+                msg = '>> The system variable `{0}` has been '
+                msg += 'added to your `{1}` file!'
+                msg = msg.format(self.environ_name, conf_file)
+                print(msg)
 
     # Checks file and folder structures
     def directory_tree_check(self, loc='./'):
@@ -146,7 +189,8 @@ class DownloadManager(object):
         Checks the file structure of the current directory, and determines
         if it is a ``git`` repository or not. If not, it will save the
         catalogues to a location in the user's home directory, under
-        ``~/user/.sdss_catls``
+        ``~/user/.sdss_catls``. It also adds the location of the
+        output directory as an environment variable.
 
         Parameters
         ------------
@@ -161,11 +205,10 @@ class DownloadManager(object):
             Path to the output directory, to which catalogues can be saved
             and stored.
         """
-        # Check if directory is a ``git`` repository
-        # Environment variable
+        # Defining output directory
         try:
-            # Main directory for catalogues
-            catl_maindir = os.environ['sdss_catl_path1']
+            # Environment variable
+            catl_maindir = os.environ[self.environ_name]
             # Output directory - Check if directory exists
             outdir = os.path.join(  catl_maindir,
                                     'data',
@@ -173,47 +216,38 @@ class DownloadManager(object):
                                     'SDSS/')
             cfutils.Path_Folder(outdir)
             assert(os.path.exists(outdir))
-
-            return outdir
         except KeyError:
-            ## Check if current directory is a Git Repository and has
-            ## the correct project structure
+            # Git Repository
             try:
-                base_dir   = cwpaths.git_root_dir(loc)
-                outdir     = os.path.join(base_dir, 'data', 'external', 'SDSS/')
-                module_dir = cwpaths.git_root_dir(path=os.path.realpath(__file__))
+                base_dir = cwpaths.git_root_dir(loc)
+                outdir   = os.path.join(base_dir, 'data', 'external', 'SDSS/')
+                mod_dir  = cwpaths.git_root_dir(path=os.path.realpath(__file__))
                 # Creating directory if necessary
-                if not (os.path.realpath(module_dir) == os.path.realpath(base_dir)):
+                if not (os.path.realpath(mod_dir) != os.path.realpath(base_dir)):
                     # Creating new directory
                     cfutils.Path_Folder(outdir)
                     assert(os.path.exists(outdir))
-                    return outdir
+                else:
+                    msg = '>> Current directory ({0}) is not supported! '
+                    msg += 'You must move directories!'
+                    msg = msg.format(outdir)
             except:
-                # Using the home directory as output directory
-                sdss_catl_path = os.path.join(  os.path.expanduser('~'),
-                                                '.sdss_catls')
+                # Home directory location
+                base_dir = os.path.join(os.path.expanduser('~'),
+                                        '.sdss_catls')
                 # Output directory
-                outdir = os.path.join(  sdss_catl_path,
+                outdir   = os.path.join(base_dir,
                                         'data',
                                         'external',
                                         'SDSS/')
-                # cfutils.Path_Folder(outdir)
+                # Creating directory
+                cfutils.Path_Folder(outdir)
                 assert(os.path.exists(outdir))
-                # Setting ``sdss_catl_path1`` variable
-                with open(os.path.expanduser('~/.bashrc'),'a') as outfile:
-                    export_str = 'export sdss_catl_path={0}'.format(
-                        sdss_catl_path)
-                    print(export_str)
-                    outfile.write('\n\n')
-                    outfile.write('\n## Output directory for SDSS Catalogues\n')
-                    outfile.write(export_str)
-                    outfile.write('\n\n')
-                    # Printing out message
-                    msg  = 'The system variable `sdss_catl_path` has been '
-                    msg += 'added to your `~/.bashrc` file!'
-                    print(msg)
+            ##
+            ## Adding directory as environment variable
+            self._environ_variable_write(outdir)
 
-                return outdir
+        return outdir
 
     # Output directory for local copies of catalogues
     def local_outdir_path(self, loc='./', catl_type='memb', catl_kind='data',
