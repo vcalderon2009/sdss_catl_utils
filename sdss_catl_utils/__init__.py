@@ -21,3 +21,4 @@ if sys.version_info < tuple((int(val) for val in __minimum_python_version__.spli
 if not _ASTROPY_SETUP_:
     # For egg_info test builds to pass, put package imports here.
     from . import mocks_manager
+    from .custom_exceptions import *

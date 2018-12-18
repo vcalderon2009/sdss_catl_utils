@@ -10,7 +10,9 @@ __author__     = ['Victor Calderon']
 __copyright__  = ["Copyright 2018 Victor Calderon, "]
 __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
-__all__        = [  'CatlUtils']
+__all__        = [  'CatlUtils',
+                    'catl_keys',
+                    'catl_keys_prop']
 
 
 import os
@@ -19,9 +21,253 @@ from cosmo_utils.utils import work_paths      as cwpaths
 from cosmo_utils.utils import web_utils       as cweb
 
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
+from sdss_catl_utils.custom_exceptions import SDSSCatlUtils_Error
 
-## Functions and classes
+## -- Functions and classes -- ##
 
+# Catalogue keys - Main
+def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
+    """
+    Provides a dictionary/list with the corresponding keys for 1) halo mass,
+    2) Haloid/GroupID, 3) Group/Halo Galaxy-Type.
+
+    Parameters
+    ------------
+    catl_kind : {``data``, ``mocks``} `str`, optional
+        Type of the catalogue being analyzed. This variable corresponds
+        to whether a ``real`` or ``synthetic/mock`` catalogue is being
+        read/analyzed. This variable is set to ``data`` by default.
+
+        Options:
+            - ``data``: Catalogue(s) from the SDSS `real` catalogues
+            - ``mocks``: Catalogue(s) from the `mock` catalogues.
+
+    perf_opt : `bool`, optional
+        If True, it returns the corresponding keys for a ``perfect``
+        SDSS catalogue. This option only applies when ``catl_kind == 'mocks'``.
+
+    return_type : {``list``, ``dict``} `str`, optional
+        Type of output to be returned. This variable is set to `list` by
+        default.
+
+        Options:
+            - ``list``: Returns the output as part of a list. The order of
+                        the elements are: ``'group mass'``,
+                        ``'groupid/haloid'``, and ``Group/Halo ID``.
+
+    Returns
+    ------------
+    catl_objs : `dict` or `list`
+        Dictionary or list of keys for ``group/halo mass``,
+        ``group ID`` and ``galaxy type``
+        columns in catalogues. This variable depends on the choice of
+        `return_type`.
+
+    Raises
+    ------------
+    SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
+        Program exception if input parameters are `not` accepted.
+
+    Examples
+    ------------
+    This function can be used for several different combinations of parameters.
+    For example, if we wanted to analyze a ``data`` catalogue, and have this
+    function return a ``list`` as the output, one could write::
+
+        >>> catl_keys(catl_kind='data', return_type='list')
+        ['M_h', 'groupid', 'galtype']
+
+    This list corresponds to the 1) Group estimated mass, 2) Galaxy's group ID,
+    and 3) Galaxy's group galaxy type.
+
+    If instead, we wanted to analyze ``perfect mock catalogues``, we
+    could write::
+
+        >>> catl_keys(catl_kind='mocks', perf_opt=True, return_type='list')
+        ['M_h', 'haloid', 'galtype']
+
+    For more information and examples, please refer to
+    :ref:`quickstart_getting_started`.
+    """
+    file_msg = cfutils.Program_Msg(__file__)
+    ## Checking input parameters
+    # `catl_kind` - Value
+    catl_kind_arr = ['data', 'mocks']
+    if not (catl_kind in catl_kind_arr):
+        msg = '{0} `catl_kind` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_kind)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_kind` - Type
+    if not (isinstance(catl_kind, str)):
+        msg = '{0} `catl_kind` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_kind))
+        raise TypeError(msg)
+    # `perf_opt`  - Type
+    if not (isinstance(perf_opt, bool)):
+        msg = '{0} `perf_opt` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(perf_opt))
+        raise TypeError(msg)
+    # `return_type` - Value
+    return_type_arr = ['list', 'dict']
+    if not (return_type in return_type_arr):
+        msg = '{0} `return_type` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, return_type)
+        raise SDSSCatlUtils_Error(msg)
+    # `return_type` - Type
+    if not (isinstance(return_type, str)):
+        msg = '{0} `return_type` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(return_type))
+        raise TypeError(msg)
+    ##
+    ## If analyzing real catalogues, setting ``perf_opt`` to False.
+    if (catl_kind == 'data'):
+        perf_opt = False
+    ##
+    ## Keys for the different sets of catalogues
+    if (catl_kind == 'data'):
+        (   gm_key,
+            id_key,
+            galtype) = ['M_h', 'groupid', 'galtype']
+    elif (catl_kind == 'mocks'):
+        if perf_opt:
+            (   gm_key,
+                id_key,
+                galtype) = ['M_h', 'haloid', 'galtype']
+        else:
+            (   gm_key,
+                id_key,
+                galtype) = ['M_group', 'groupid', 'g_galtype']
+    ##
+    ## Determining which type of output to return
+    if (return_type == 'list'):
+        catl_objs = [gm_key, id_key, galtype]
+    elif (return_type == 'dict'):
+        catl_objs = {'gm_key': gm_key, 'id_key': id_key,
+                        'galtype_key':galtype_key}
+
+    return catl_objs
+
+# Catalogue Keys - Galaxy properties
+def catl_keys_prop(catl_kind='data', catl_info='memb', return_type='list'):
+    """
+    Provides a dictionary/list with the corresponding keys for 1) specific
+    star formation rate (sSFR) and 2) stellar mass.
+
+    Parameters
+    ------------
+    catl_kind : {``data``, ``mocks``} `str`, optional
+        Type of the catalogue being analyzed. This variable corresponds
+        to whether a ``real`` or ``synthetic/mock`` catalogue is being
+        read/analyzed. This variable is set to ``data`` by default.
+
+        Options:
+            - ``data``: Catalogue(s) from the SDSS `real` catalogues
+            - ``mocks``: Catalogue(s) from the `mock` catalogues.
+
+    catl_info : {``memb``, ``groups``}`bool`, optional
+        Option for which type of catalogue is being analyzed. This variable
+        correspondos to whether a ``galaxy``-catalogue or a ``group``-catalogue
+        is being analyzed. This variable is set to ``members`` by default.
+
+        Options:
+            - ``memb``: Galaxy catalogue with the `member` galaxies of groups.
+            - ``groups``: Catalogues with `group` information.
+
+    return_type : {``list``, ``dict``} `str`, optional
+        Type of output to be returned. This variable is set to `list` by
+        default.
+
+        Options:
+            - ``list``: Returns the output as part of a list. The order of
+                        the elements are: ``'group mass'``,
+                        ``'groupid/haloid'``, and ``Group/Halo ID``.
+    Returns
+    ------------
+    catl_objs : `dict` or `list`
+        Dictionary or list of keys for ``logssfr`` and ``logmstar``
+        columns in catalogues. This variable depends on the choice of
+        `return_type`.
+
+    Raises
+    ------------
+    SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
+        Program exception if input parameters are `not` accepted.
+
+    Examples
+    ------------
+    This function can be used for several different combinations of parameters.
+    For example, if we wanted to analyze a ``data`` catalogue, and have this
+    function return a ``list`` as the output, one could write::
+
+        >>> catl_keys_prop(catl_kind='data', return_type='list')
+        ['logssfr', 'logMstar_JHU']
+
+    This list corresponds to the 1) `specific star formation rate` key and
+    2) `stellar mass` key.
+
+    If instead, we wanted to analyze a ``mock`` catalogue and return the
+    appropriate keys for a ``group catalogue``, we could write::
+
+        >>> catl_keys_prop(catl_kind='mocks', catl_info='groups')
+        ['logssfr', 'logMstar']
+
+    For more information and examples, please refer to
+    :ref:`quickstart_getting_started`.
+    """
+    file_msg = cfutils.Program_Msg(__file__)
+    ## Checking input parameters
+    # `catl_kind` - Value
+    catl_kind_arr = ['data', 'mocks']
+    if not (catl_kind in catl_kind_arr):
+        msg = '{0} `catl_kind` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_kind)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_kind` - Type
+    if not (isinstance(catl_kind, str)):
+        msg = '{0} `catl_kind` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_kind))
+        raise TypeError(msg)
+    # `catl_info` - Value
+    catl_info_arr = ['memb', 'groups']
+    if not (catl_info in catl_info_arr):
+        msg = '{0} `catl_info` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_info)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_info` - Type
+    if not (isinstance(catl_info, str)):
+        msg = '{0} `catl_info` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_info))
+        raise TypeError(msg)
+    # `return_type` - Value
+    return_type_arr = ['list', 'dict']
+    if not (return_type in return_type_arr):
+        msg = '{0} `return_type` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, return_type)
+        raise SDSSCatlUtils_Error(msg)
+    # `return_type` - Type
+    if not (isinstance(return_type, str)):
+        msg = '{0} `return_type` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(return_type))
+        raise TypeError(msg)
+    ##
+    ## Dictionary with entries for ssfr and mstar for different combinations.
+    keys_dict = {   'data_memb'   : ['logssfr', 'logMstar_JHU'],
+                    'data_groups' : ['logssfr_tot', 'logMstar_tot'],
+                    'mocks_memb'  : ['logssfr', 'logMstar'],
+                    'mocks_groups': ['logssfr', 'logMstar']}
+    # Deciding which key to use
+    catl_key_str = '{0}_{1}'.format(catl_kind, catl_info)
+    #
+    # Determining which type of output to return
+    if (return_type == 'list'):
+        catl_objs = keys_dict[catl_key_str]
+    elif (return_type == 'dict'):
+        catl_objs = {   'logssfr_key' : keys_dict[catl_key_str][0],
+                        'logmstar_key': keys_dict[catl_key_str][1]}
+
+    return catl_objs
+
+# Main class to handle catalogues
 class CatlUtils(object):
     """
     Class used to handle the galaxy/group galaxy/group catalogues, *after*
