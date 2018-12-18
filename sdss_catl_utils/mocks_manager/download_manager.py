@@ -609,7 +609,7 @@ class DownloadManager(object):
         Examples
         ----------
 
-        >>> # To download the synthetic catalogues # doctest: +SKIP
+        >>> # To download the synthetic catalogues
         >>> from sc.mocks_manager import DownloadManager
         >>>
         >>> # Downloading catalogues
