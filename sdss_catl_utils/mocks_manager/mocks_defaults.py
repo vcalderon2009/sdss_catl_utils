@@ -19,6 +19,7 @@ in this module.
 # your cache directory. These choices dictate any behavior that loads an
 # unspecified CachedHaloCatalog into memory.
 
+environ_name = 'sdss_catl_path'
 catl_kind    = 'mocks'
 hod_n        = 0
 halotype     = 'fof'
