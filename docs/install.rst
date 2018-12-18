@@ -33,6 +33,18 @@ version by running ::
 This will ensure that you have the most up-to-date version of
 ``SDSS_Catl_Utils``.
 
+.. note::
+
+    Consider installing ``sdss_catl_utils`` into a virtual environment.
+    Setting this up is completely straightforward and takes less than
+    a minute, even if this is your first time using a virtual environment.
+    Using a virtual environment simplifies not just the current installation
+    but also package upgrades and your subsequent workflow.
+    If you use `conda <https://www.continuum.io/downloads>`_
+    to manage your python distribution, you can find explicit instructions
+    in the :ref:`installing_sdss_catl_utils_with_virtualenv`
+    section of the documentation.
+
 Building from Source
 ====================
 
@@ -80,6 +92,40 @@ that only thoroughly tested and documented code appears in the public
 ``master`` branch, though ``SDSS_Catl_Utils`` users should be awayre
 of the distinction between the bleeding edge version in master
 and the official release version available through ``pip``.
+
+.. _sdss_catl_utils_dependencies:
+
+Dependencies
+============
+
+If your install ``sdss_catl_utils`` using pip, then most of your dependencies
+will be handled for you automatically. The only additional dependency
+you may need is:
+
+* `h5py <http://h5py.org/>`__ : 2.5 or later
+
+The h5py package is used for fast I/O of galaxy and group catalogues.
+
+If you did not use pip, then you should be aware of the following strict
+requirements:
+
+* `Python <http://www.python.org/>`_: 3x or higher 
+* `Numpy <http://www.numpy.org>`_ 
+* `Astropy <http://www.astropy.org/>`__ 
+* `Pandas <https://pandas.pydata.org/>`_ 
+* `h5py <https://www.h5py.org/>`__ 
+* `GitPython <https://gitpython.readthedocs.io/en/stable/>`_ 
+* `Cython <https://cython.org/>`_ 
+* `requests <http://docs.python-requests.org/en/master/>`_ 
+* `numexpr <https://github.com/pydata/numexpr>`_ 
+* `Scipy <https://www.scipy.org/>`_ 
+* `Scikit-Learn <https://scikit-learn.org>`_ 
+* `BeautifulSoup <https://www.crummy.com/software/BeautifulSoup/>`_ 
+* `wget <https://bitbucket.org/techtonik/python-wget/src>`_ 
+* `tqdm <https://tqdm.github.io/>`_ 
+* `cosmo-utils <https://github.com/vcalderon2009/cosmo_utils>`_ 
+
+Any of the above can be installed with either `pip` or `conda`.
 
 .. _verifying_installation:
 
