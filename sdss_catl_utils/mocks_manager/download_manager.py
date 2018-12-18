@@ -26,7 +26,7 @@ class DownloadManager(object):
     catalogue data and cache the downloaded catalogues.
 
     For list of available pre-processed galaxy- and group-galaxy
-    catalogues proved by ``sdss_catl_utils``, see
+    catalogues provided by ``sdss_catl_utils``, see
 
     """
     def __init__(self, **kwargs):
@@ -547,6 +547,12 @@ class DownloadManager(object):
             msg = '>>> `catl_kind` ({0}) is not a valid type!'
             msg = msg.format(type(catl_kind))
             raise TypeError(msg)
+        # `ext` - Value
+        ext_arr = ['hdf5']
+        if not (ext in ext_arr):
+            msg = '`ext` ({0}) is not a valid input parameter!'
+            msg = msg.format(ext)
+            raise ValueError(msg)
         # ``return_files_url``
         if not (isinstance(return_files_url, bool)):
             msg = '>>> `return_files_url` ({0}) is not a valid input type!'
