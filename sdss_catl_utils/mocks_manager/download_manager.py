@@ -610,7 +610,7 @@ class DownloadManager(object):
         ----------
 
         >>> # To download the synthetic catalogues
-        >>> from sc.mocks_manager import DownloadManager
+        >>> from sdss_catl_utils.mocks_manager import DownloadManager
         >>>
         >>> # Downloading catalogues
         >>> A = DownloadManager()
