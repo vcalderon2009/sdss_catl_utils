@@ -121,7 +121,7 @@ class CatlUtils(object):
         Examples
         ----------
 
-        >>> from sdss_catl_utils.mocks_manager.download_manager import DownloadManager
+        >>> from sdss_catl_utils.mocks_manager.catl_utils import CatlUtils
         """
         super().__init__()
         # Assigning variables
