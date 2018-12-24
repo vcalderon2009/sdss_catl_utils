@@ -24,7 +24,7 @@ from sdss_catl_utils.custom_exceptions import SDSSCatlUtils_Error
 #########-------------------------------------------------------------#########
 #########-------------------------------------------------------------#########
 
-#### ------------------- Test `DownloadManager` function - Types ----------------- ##
+#### ------------------- Test `DownloadManager` function - Types ----------- ##
 
 catl_kind_arr    = ['data', 'mocks']
 hod_n_arr        = [1,2]
@@ -413,6 +413,112 @@ def test_DownloadManager_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
                     'remove_files': remove_files,
                     'environ_name': environ_name}
     ## Running function
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         obj_ii = DownloadManager(**input_dict)
+
+#### ------------ Test `DownloadManager` function - _catl_prefix ----------- ##
+prefix_arr = [\
+    ('data', 0, 'fof', 1, 12, 1.0, '19', 'mr', False, 'memb', 'data/mr/Mr19/member_galaxy_catalogues'),
+    ('data', 0, 'fof', 1, 12, 1.0, '20', 'mr', False, 'memb', 'data/mr/Mr20/member_galaxy_catalogues'),
+    ('data', 0, 'fof', 1, 12, 1.0, '21', 'mr', False, 'memb', 'data/mr/Mr21/member_galaxy_catalogues'),
+    ]
+prefix_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, '
+prefix_str += 'dv, sample, type_am, perf_opt, catl_type, expected' 
+@pytest.mark.parametrize(prefix_str, prefix_arr)
+def test_DownloadManager_catl_prefix(catl_kind, hod_n, halotype, clf_method,
+    clf_seed, dv, sample, type_am, perf_opt, catl_type, expected):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.download_manager.DownloadManager`
+    for catalogue prefix strings.
+
+    Parameters
+    ------------
+    catl_kind : {``data``, ``mocks``} `str`
+        Kind of catalogues to download. This variable is set to
+        ``mocks`` by default.
+
+        Options:
+            - ``data``: Downloads the SDSS DR7 real catalogues.
+            - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
+
+    hod_n : `int`, optional
+        Number of the HOD model to use. This value is set to `0` by
+        default.
+
+    halotype : {'so', 'fof'}, `str`, optional
+        Type of dark matter definition to use. This value is set to
+        ``so`` by default.
+
+        Options:
+            - ``so``: Spherical Overdensity halo definition.
+            - ``fof``: Friends-of-Friends halo definition.
+
+    clf_method : {1, 2, 3}, `int`, optional
+        Method for assigning galaxy properties to mock galaxies.
+        This variable dictates how galaxies are assigned
+        luminosities or stellar masses based on their galaxy type
+        and host halo's mass. This variable is set to ``1`` by
+        default.
+
+        Options:
+            - ``1``: Independent assignment of (g-r) colour, sersic, and specific star formation rate (`logssfr`)
+            - ``2``: (g-r) colour dictates active/passive designation and draws values independently.
+            - ``3``: (g-r) colour dictates active/passive designation, and assigns other galaxy properties for that given galaxy.
+
+    clf_seed : `int`, optional
+        Value of the random seed used for the conditional luminosity function.
+        This variable is set to ``1235`` default.
+
+    dv : `float`, optional
+        Value for the ``velocity bias`` parameter. It is the difference
+        between the galaxy and matter velocity profiles.
+
+        .. math::
+            dv = \\frac{v_{g} - v_{c}}{v_{m} - v_{c}}
+
+        where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
+        matter velocity.
+
+    sample : {'19', '20', '21'}, `str`, optional
+        Luminosity of the SDSS volume-limited sample to analyze.
+        This variable is set to ``'19'`` by default.
+
+        Options:
+            - ``'19'``: :math:`M_r = 19` volume-limited sample
+            - ``'20'``: :math:`M_r = 20` volume-limited sample
+            - ``'21'``: :math:`M_r = 21` volume-limited sample
+
+    type_am : {'mr', 'mstar'}, `str`, optional
+        Type of Abundance matching used in the catalogue. This
+        variable is set to ``'mr'`` by default.
+
+        Options:
+            - ``'mr'``: Luminosity-based abundance matching used
+            - ``'mstar'``: Stellar-mass-based abundance matching used.
+    
+    perf_opt : `bool`, optional
+        If `True`, it chooses to analyze the ``perfect`` version of
+        the synthetic galaxy/group galaxy catalogues. Otherwise,
+        it downloads the catalogues with group-finding errors
+        included. This variable is set to ``False`` by default.
+    """
+    # Creating dictionary
+    input_dict = {  'catl_kind': catl_kind,
+                    'hod_n': hod_n,
+                    'halotype': halotype,
+                    'clf_method': clf_method,
+                    'clf_seed': clf_seed,
+                    'dv': dv,
+                    'sample': sample,
+                    'type_am': type_am,
+                    'perf_opt': perf_opt}
+    ## Initializing object
+    download_obj = DownloadManager(**input_dict)
+    # Catalogue prefix
+    download_prefix = download_obj._catl_prefix(catl_type=catl_type,
+                                                catl_kind=catl_kind,
+                                                perf_opt=perf_opt)
+    # Checking that strings are equal
+    assert(download_prefix == expected)
+
 
