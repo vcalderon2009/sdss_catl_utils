@@ -12,10 +12,16 @@ __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
 __all__        = [  'CatlUtils',
                     'catl_keys',
-                    'catl_keys_prop']
+                    'catl_keys_prop',
+                    'catl_clean',
+                    'catl_clean_nmin',
+                    'check_input_params']
 
 
 import os
+import numpy as np
+import pandas as pd
+from collections import Counter
 from cosmo_utils.utils import file_utils      as cfutils
 from cosmo_utils.utils import work_paths      as cwpaths
 from cosmo_utils.utils import web_utils       as cweb
@@ -43,7 +49,7 @@ def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
             - ``mocks``: Catalogue(s) from the `mock` catalogues.
 
     perf_opt : `bool`, optional
-        If True, it returns the corresponding keys for a ``perfect``
+        If `True`, it returns the corresponding keys for a ``perfect``
         SDSS catalogue. This option only applies when ``catl_kind == 'mocks'``.
 
     return_type : {``list``, ``dict``} `str`, optional
@@ -164,10 +170,10 @@ def catl_keys_prop(catl_kind='data', catl_info='memb', return_type='list'):
             - ``data``: Catalogue(s) from the SDSS `real` catalogues
             - ``mocks``: Catalogue(s) from the `mock` catalogues.
 
-    catl_info : {``memb``, ``groups``}`bool`, optional
+    catl_info : {``memb``, ``groups``} `bool`, optional
         Option for which type of catalogue is being analyzed. This variable
         correspondos to whether a ``galaxy``-catalogue or a ``group``-catalogue
-        is being analyzed. This variable is set to ``members`` by default.
+        is being analyzed. This variable is set to ``memb`` by default.
 
         Options:
             - ``memb``: Galaxy catalogue with the `member` galaxies of groups.
@@ -267,6 +273,387 @@ def catl_keys_prop(catl_kind='data', catl_info='memb', return_type='list'):
 
     return catl_objs
 
+# Cleaning the catalogues from `bad` inputs
+def catl_clean(catl_pd, catl_kind, catl_info='memb', reindex=True):
+    """
+    Cleans and removes the ``bad`` rows, i.e. those that contain `failed`
+    entries for sSFR and Mstar.
+
+    Parameters
+    ------------
+    catl_pd : `pandas.DataFrame`
+        DataFrame containing the information about galaxies or galaxy groups.
+
+    catl_kind : {``data``, ``mocks``} `str`, optional
+        Type of the catalogue being analyzed. This variable corresponds
+        to whether a ``real`` or ``synthetic/mock`` catalogue is being
+        read/analyzed.
+
+        Options:
+            - ``data``: Catalogue(s) from the SDSS `real` catalogues
+            - ``mocks``: Catalogue(s) from the `mock` catalogues.
+
+    catl_info : {``memb``, ``groups``} `bool`, optional
+        Option for which type of catalogue is being analyzed. This variable
+        correspondos to whether a ``galaxy``-catalogue or a ``group``-catalogue
+        is being analyzed. This variable is set to ``memb`` by default.
+
+        Options:
+            - ``memb``: Galaxy catalogue with the `member` galaxies of groups.
+            - ``groups``: Catalogues with `group` information.
+    
+    reindex : `bool`, optional
+        If `True`, the output catalogue is reindexed from the original dataframe
+        `catl_pd`. This variable is set to `True` by default.
+
+    Returns
+    ----------
+    catl_pd_mod : `pandas.DataFrame`
+        Modified clean version of `catl_pd`. It removes the `failed`
+        values.
+
+    Raises
+    ------------
+    SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
+        Program exception if input parameters are `not` accepted.
+    """
+    file_msg = cfutils.Program_Msg(__file__)
+    ## Checking input parameters
+    # `catl_pd` - Type
+    if not (isinstance(catl_pd, pd.DataFrame)):
+        msg = '{0} `catl_pd` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(catl_pd))
+        raise TypeError(msg)
+    # `catl_kind` - Value
+    catl_kind_arr = ['data', 'mocks']
+    if not (catl_kind in catl_kind_arr):
+        msg = '{0} `catl_kind` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_kind)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_kind` - Type
+    if not (isinstance(catl_kind, str)):
+        msg = '{0} `catl_kind` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_kind))
+        raise TypeError(msg)
+    # `catl_info` - Value
+    catl_info_arr = ['memb', 'groups']
+    if not (catl_info in catl_info_arr):
+        msg = '{0} `catl_info` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_info)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_info` - Type
+    if not (isinstance(catl_info, str)):
+        msg = '{0} `catl_info` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_info))
+        raise TypeError(msg)
+    # `reindex  ` - Type
+    if not (isinstance(reindex, bool)):
+        msg = '{0} `reindex` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(reindex))
+        raise TypeError(msg)
+    ##
+    ## List of values that are considered `failed`. These values
+    ## were assigned by the MPA-JHU group that developed the VAGC catalogue.
+    ssfr_fail_arr = [0, -99, -999, np.nan]
+    mstar_fail_arr= [-1, 0, np.nan]
+    # Label for `ssfr` and `mstar`
+    logssfr_key, logmstar_key = catl_keys_prop( catl_kind=catl_kind,
+                                                catl_info=catl_info,
+                                                return_type='list')
+    ##
+    ## Cleaning catalogue entries
+    if (logmstar_key in catl_pd.columns.values):
+        catl_pd_mod = catl_pd.loc[~catl_pd[logssfr_key].isin(ssfr_fail_arr) &
+                                  ~catl_pd[logmstar_key].isin(mstar_fail_arr)]
+    else:
+        catl_pd_mod = catl_pd.loc[~catl_pd[logssfr_key].isin(ssfr_fail_arr)]
+    #
+    # Option if to reindex the new `clean` catalogue
+    if reindex:
+        catl_pd_mod.reset_index(drop=True, inplace=True)
+
+    return catl_pd_mod
+
+# Cleaning the catalogue from `fail` values and only include galaxies
+# from groups larger than the number of galaxy threshold, i.e. ``nmin``.
+def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
+    nmin=1, perf_opt=False):
+    """
+    Cleans and removed the ``bad`` rows with `failed` values, i.e.
+    those that contain `failed` entries. This method also includes
+    galaxies from groups above the ``nmin`` galaxy number threshold.
+
+    Parameters
+    --------------
+    catl_pd : `pandas.DataFrame`
+        DataFrame containing the information about galaxies or galaxy groups.
+
+    catl_kind : {``data``, ``mocks``} `str`, optional
+        Type of the catalogue being analyzed. This variable corresponds
+        to whether a ``real`` or ``synthetic/mock`` catalogue is being
+        read/analyzed.
+
+        Options:
+            - ``data``: Catalogue(s) from the SDSS `real` catalogues
+            - ``mocks``: Catalogue(s) from the `mock` catalogues.
+
+    catl_info : {``memb``, ``groups``} `bool`, optional
+        Option for which type of catalogue is being analyzed. This variable
+        correspondos to whether a ``galaxy``-catalogue or a ``group``-catalogue
+        is being analyzed. This variable is set to ``memb`` by default.
+
+        Options:
+            - ``memb``: Galaxy catalogue with the `member` galaxies of groups.
+            - ``groups``: Catalogues with `group` information.
+    
+    reindex : `bool`, optional
+        If `True`, the output catalogue is reindexed from the original dataframe
+        `catl_pd`. This variable is set to `True` by default.
+
+    nmin : `int`, optional
+        Minimum group richness to have in the (galaxy) group catalogue.
+        This variable is set to ``1`` by default, and must be larger than
+        `1`.
+
+    perf_opt : `bool`, optional
+        Option for using a `perfect` mock catalogue. This variable is set
+        to `False` by default.
+
+    Returns
+    --------------
+    catl_pd_mod : `pandas.DataFrame`
+        Version of `catl_pd` after having removed the `failed` values
+        of `sSFR` and `Mstar`, and also after having chosen only galaxies
+        and groups with group richnesses larger than ``nmin``.
+
+    Raises
+    ------------
+    SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
+        Program exception if input parameters are `not` accepted.
+
+    Examples
+    ------------
+    Before using this function, one needs to have read one of the
+    (galaxy) group catalogues. If for example, one wants to create a
+    new object from the ``data`` `real` SDSS catalogue with galaxies 
+    from groups with ``n > 10``, one can do:
+
+    >>> from cosmo_utils.utils import file_readers as cfr
+    >>> from sdss_catl_utils.mock_manager import catl_clean_nmin
+    >>> nmin = 10 # Minimum number of galaxies in file
+    >>> catl_pd = cfr.read_hdf5_file_to_pandas_DF('/path/to/file') # doctest: +SKIP
+    >>> catl_mod = catl_clean_nmin(catl_pd, 'data', nmin=nmin) # doctest: +SKIP
+
+    Now, the resulting catalogue will only include galaxies from groups
+    with ``n > 10``.
+
+    """
+    file_msg = cfutils.Program_Msg(__file__)
+    ## Checking input parameters
+    # `catl_pd` - Type
+    if not (isinstance(catl_pd, pd.DataFrame)):
+        msg = '{0} `catl_pd` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(catl_pd))
+        raise TypeError(msg)
+    # `catl_kind` - Value
+    catl_kind_arr = ['data', 'mocks']
+    if not (catl_kind in catl_kind_arr):
+        msg = '{0} `catl_kind` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_kind)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_kind` - Type
+    if not (isinstance(catl_kind, str)):
+        msg = '{0} `catl_kind` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_kind))
+        raise TypeError(msg)
+    # `catl_info` - Value
+    catl_info_arr = ['memb', 'groups']
+    if not (catl_info in catl_info_arr):
+        msg = '{0} `catl_info` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, catl_info)
+        raise SDSSCatlUtils_Error(msg)
+    # `catl_info` - Type
+    if not (isinstance(catl_info, str)):
+        msg = '{0} `catl_info` ({1}) is not a valid input type!!'
+        msg = msg.format(file_msg, type(catl_info))
+        raise TypeError(msg)
+    # `reindex  ` - Type
+    if not (isinstance(reindex, bool)):
+        msg = '{0} `reindex` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(reindex))
+        raise TypeError(msg)
+    # `nmin` - Type
+    nmin_type_arr = (int, float)
+    if (not isinstance(nmin, nmin_type_arr)):
+        msg = '{0} `nmin` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(nmin))
+        raise TypeError(msg)
+    # `nmin` - Value
+    if not (nmin >= 1):
+        msg = '{0} `nmin` ({1}) must be larger than `1`!'
+        msg = msg.format(file_m, nmin)
+        raise SDSSCatlUtils_Error(msg)
+    # `perf_opt` - Type
+    if not (isinstance(perf_opt, bool)):
+        msg = '{0} `perf_opt` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(perf_opt))
+        raise TypeError(msg)
+    ##
+    ## Types of galaxies
+    cens = int(1)
+    nmin = int(nmin)
+    # Keys for the catalogue
+    gm_key, id_key, galtype_key = catl_keys(catl_kind, perf_opt=perf_opt)
+    # Cleaning catalogue entries
+    catl_pd_mod = catl_clean(   catl_pd,
+                                catl_kind=catl_kind,
+                                catl_info=catl_info,
+                                reindex=reindex)
+    # Choosing only galaxies in groups of richness >= `nmin`
+    if (catl_info == 'groups'):
+        if ('ngals' in catl_pd_mod.columns):
+            catl_pd_mod_nmin = catl_pd_mod.loc[catl_pd_mod['ngals'] >= nmin]
+        else:
+            msg = '{0} Key `ngals` not found in DataFrame!'.format(file_msg)
+            raise SDSSCatlUtils_Error(msg)
+    elif (catl_info == 'memb'):
+        # List of central galaxies
+        cens_pd = catl_pd_mod.loc[(catl_pd_mod[galtype_key] == cens), id_key]
+        catl_pd_cen = catl_pd_mod.loc[catl_pd_mod[id_key].isin(cens_pd)]
+        # Counting the number of galaxies in each galaxy group and choosing
+        # those above the `nmin` threshold.
+        g_counts = Counter(catl_pd_cen[id_key].values)
+        g_ngals  = [xx for xx in g_counts.keys() if g_counts[xx]>=nmin]
+        # Selecting only galaxies with ``group_id`` in ``g_ngals``.
+        catl_pd_mod_nmin = catl_pd_cen.loc[catl_pd_cen[id_key].isin(g_ngals)]
+    #
+    # Resetting index if necessary
+    if reindex:
+        catl_pd_mod_nmin.reset_index(drop=True, inplace=True)
+
+    return catl_pd_mod_nmin
+
+# Directory with accepted input parameters
+def _get_input_params_dict():
+    """
+    Checks the input parameters to the class object.
+
+    Returns
+    ---------
+    input_dict : `dict`
+        Dictionary with the accepted ``type`` and ``value`` input
+        parameters.
+    """
+    ## Dictionary with input variables
+    # Variable types
+    input_dict_type = { 'catl_type'    : (str),
+                        'hod_n'        : (int),
+                        'halotype'     : (str),
+                        'clf_method'   : (int),
+                        'clf_seed'     : (int),
+                        'dv'           : (int, float),
+                        'sample'       : (str),
+                        'type_am'      : (str),
+                        'cosmo_choice' : (str),
+                        'perf_opt'     : (bool),
+                        'cosmo_choice' : (str),
+                        'remove_files' : (bool),
+                        'environ_name' : (str)}
+    # Variable inputs
+    input_dict_vals = { 'catl_type'    : ['data', 'mocks'],
+                        'hod_n'        : list(range(10)),
+                        'halotype'     : ['fof', 'so'],
+                        'clf_method'   : [1, 2, 3],
+                        'sample'       : ['19', '20', '21'],
+                        'type_am'      : ['mr', 'mstar'],
+                        'cosmo_choice' : ['LasDamas', 'Planck']}
+    # Merging dictionaries
+    input_dict = {'type': input_dict_type, 'vals': input_dict_vals}
+
+    return input_dict
+
+# Checking input parameters to make sure they are `expected`
+def check_input_params(input_var, var_name, check_type='type'):
+    """
+    Checks the type and/or values for different variables.
+
+    Parameters
+    ------------
+    input_var : `int`, `float`, `bool`, `str`
+        Input variable to be evaluated.
+
+    var_name : `str`
+        Name of the input parameter being evaluated. This variable name
+        must correspond to one of the keys in the `type` or `vals`
+        dictionaries.
+
+    check_type : {``type``, ``vals``} `str`
+        Type of check to perform. This variable is set to ``type`` by default.
+
+        Options:
+            - ``type``: It checks for the `type` of `input_var`.
+            - ``vals``: It checks for the `value` of `input_var`.
+    
+    Raises
+    ------------
+    SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
+        Program exception if input parameters are `not` accepted.
+    """
+    file_msg = cfutils.Program_Msg(__file__)
+    ##
+    ## Checking input parameters
+    # `input_var` - Type
+    input_var_arr = (int, float, bool, str)
+    if not (isinstance(input_var, input_var_arr)):
+        msg = '{0} `input_var` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(input_var))
+        raise TypeError(msg)
+    # `check_type` - Type
+    if not (isinstance(check_type, str)):
+        msg = '{0} `check_type` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(check_type))
+        raise TypeError(msg)
+    # `check_type` - Value
+    check_type_arr = ['type', 'vals']
+    if not (check_type in check_type_arr):
+        msg = '{0} `check_type` ({1}) is not a valid input value!'
+        msg = msg.format(file_msg, check_type)
+        raise ValueError(msg)
+    ##
+    ## Extracting input dictinaries
+    input_dict = _get_input_params_dict()
+    # Obtaining list of acceptable inputs
+    if (check_type == 'type'):
+        # Checking for input parameters - Type
+        check_dict = input_dict[check_type]
+        # Checking if key exists
+        if (var_name in list(check_dict.keys())):
+            if not (isinstance(input_var, check_dict[var_name])):
+                msg = '{0} `{1}` ({2}) is not a valid input! Valid: `{3}` type'
+                msg = msg.format(file_msg, var_name, type(input_var),
+                        check_dict[var_name])
+                raise TypeError(msg)
+        else:
+            # If `var_name` is not in dictionary
+            msg = '{0} `{1}` is not in dictionary! Keys: `{2}`'
+            msg = msg.format(file_msg, var_name, list(check_dict.keys()))
+            raise KeyError(msg)
+    elif (check_type == 'vals'):
+        # Checking for input parameters - Values
+        check_dict = input_dict[check_type]
+        # Checking if key exists
+        if (var_name in list(check_dict.keys())):
+            if (input_var in check_dict[var_name]):
+                msg = '{0} `{1}` ({2}) is not a valid input! Valid: `{3}` type'
+                msg = msg.format(file_msg, var_name, type(input_var),
+                        check_dict[var_name])
+                raise TypeError(msg)
+        else:
+            # If `var_name` is not in dictionary
+            msg = '{0} `{1}` is not in dictionary! Keys: `{2}`'
+            msg = msg.format(file_msg, var_name, list(check_dict.keys()))
+            raise KeyError(msg)
+
 # Main class to handle catalogues
 class CatlUtils(object):
     """
@@ -354,7 +741,7 @@ class CatlUtils(object):
                 - ``Planck`` : Uses the Planck 2015 cosmology.
 
         perf_opt : `bool`, optional
-            If True, it chooses to analyze the ``perfect`` version of
+            If `True`, it chooses to analyze the ``perfect`` version of
             the synthetic galaxy/group galaxy catalogues. Otherwise,
             it downloads the catalogues with group-finding errors
             included. This variable is set to ``False`` by default.
@@ -386,6 +773,8 @@ class CatlUtils(object):
         # Other variables
         self.sample_Mr    = 'Mr{0}'.format(self.sample)
         self.sample_s     = str(self.sample)
+
+    # Checking input parameters to make sure they are `expected`
 
     # Main directory path - Path to which all catalogues are saved
     def main_dir(self):
@@ -445,7 +834,7 @@ class CatlUtils(object):
                 - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
 
         perf_opt : `bool`, optional
-            If True, it chooses to analyze the ``perfect`` version of
+            If `True`, it chooses to analyze the ``perfect`` version of
             the synthetic galaxy/group galaxy catalogues. Otherwise,
             it downloads the catalogues with group-finding errors
             included. This variable is set to ``False`` by default.
@@ -559,7 +948,7 @@ class CatlUtils(object):
                 - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
 
         print_filedir : `bool`, optional
-            If True, the path of the catalogue directory is printed
+            If `True`, the path of the catalogue directory is printed
             onto the screen. This variable is set to ``False`` by default.
 
         Returns
@@ -626,7 +1015,7 @@ class CatlUtils(object):
         return catls_dirpath
 
     # Extract the list of catalogues
-    def catl_arr_calc(self, catl_type='memb', catl_kind='mocks',
+    def catl_arr_extract(self, catl_type='memb', catl_kind='mocks',
         ext='hdf5', print_filedir=False, return_len=False):
         """
         Extracts the list of galaxy/group catalogues.
@@ -655,7 +1044,7 @@ class CatlUtils(object):
             to ``hdf5`` by default.
 
         print_filedir : `bool`, optional
-            If True, the path of the catalogue directory is printed
+            If `True`, the path of the catalogue directory is printed
             onto the screen. This variable is set to ``False`` by default.
 
 
@@ -717,6 +1106,55 @@ class CatlUtils(object):
             return catl_arr, len(catl_arr)
         else:
             return catl_arr
+
+    # Merges the `member` and `group` catalogues into a single DataFrame
+    def catl_merge(catl_idx=0, return_memb_group=False, print_filedir=False):
+        """
+        Merges the `member` and `group` catalogues for a given set of
+        input parameters, and returns a `modified` version of the galaxy
+        group catalogues with added info about the galaxy groups.
+
+        Parameters
+        ------------
+        catl_idx : `int`, optional
+            Index of the catalogue to match. The index must be smaller
+            than the number of files returned by function `~catl_arr_extract`
+            for the given combination of parameters. This variable
+            is set to ``0`` by default.
+
+        return_memb_group : `bool`, optional
+            If `True`, the function returns the `member` and `group`
+            catalogues along with the `merged` catalogue. This variable is
+            set to `False` by default.
+
+        print_filedir : `bool`, optional
+            If `True`, the output directory is printed onto the screen.
+            This variable is set to `False` by default.
+
+        Returns
+        ------------
+        merged_pd : `pandas.DataFrame`
+            Combined DataFrame containing both ``galaxy`` and ``group``
+            information for the given combination of parameters and the
+            ``catl_idx``-th catalogue(s).
+
+        memb_pd : `pandas.DataFrame`
+            Member galaxy catalogue of the ``catl_idx``-th catalogue.
+            This catalogue contains the information about the ``member``
+            galaxies. This object is only returned if
+            ``return_memb_group == True``, 
+
+        group_pd : `pandas.DataFrame`
+            Group galaxy catalogue of the ``catl_idx``-th catalogue.
+            This catalogue contains the information about the ``galaxy groups``
+            This object is only returned if ``return_memb_group == True``, 
+
+        Raises
+        ------------
+        SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
+            Program exception if input parameters are `not` accepted.
+        """
+
 
 
 
