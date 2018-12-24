@@ -417,3 +417,192 @@ def test_catl_keys_prop_return_type_errors(catl_kind, catl_info, return_type):
 
 #########-------------------------------------------------------------#########
 #########-------------------------------------------------------------#########
+
+#### --------------- Test `check_input_params` function - Types -------------##
+
+input_arr = [   ('catl_type', 'data'),
+                ('hod_n', 1),
+                ('halotype', 'fof'),
+                ('clf_method', 1),
+                ('clf_seed', 1234),
+                ('dv', 1.),
+                ('sample', '19'),
+                ('type_am', 'mstar'),
+                ('cosmo_choice', 'LasDamas'),
+                ('perf_opt', True),
+                ('remove_files', True),
+                ('environ_name', 'test_name')]
+@pytest.mark.parametrize('var_name, input_var', input_arr)
+def test_check_input_params(input_var, var_name):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`
+    for input parameters.
+
+    Parameters
+    ------------
+    input_var : `int`, `float`, `bool`, `str`
+        Input variable to be evaluated.
+
+    var_name : `str`
+        Name of the input parameter being evaluated. This variable name
+        must correspond to one of the keys in the `type` or `vals`
+        dictionaries.
+    """
+    check_type = 'type'
+    # Running function
+    catl_utils.check_input_params(input_var, var_name, check_type=check_type)
+
+#### --------------- Test `check_input_params` function - Values ------------##
+
+input_arr = [   ('catl_type', 'data'),
+                ('catl_type', 'mocks'),
+                ('hod_n', 1),
+                ('hod_n', 6),
+                ('hod_n', 9),
+                ('halotype', 'fof'),
+                ('halotype', 'so'),
+                ('clf_method', 1),
+                ('clf_method', 2),
+                ('clf_method', 3),
+                ('sample', '19'),
+                ('sample', '20'),
+                ('sample', '21'),
+                ('type_am', 'mstar'),
+                ('type_am', 'mr'),
+                ('cosmo_choice', 'LasDamas'),
+                ('cosmo_choice', 'Planck')]
+@pytest.mark.parametrize('var_name, input_var', input_arr)
+def test_check_input_params(input_var, var_name):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`
+    for input parameters.
+
+    Parameters
+    ------------
+    input_var : `int`, `float`, `bool`, `str`
+        Input variable to be evaluated.
+
+    var_name : `str`
+        Name of the input parameter being evaluated. This variable name
+        must correspond to one of the keys in the `type` or `vals`
+        dictionaries.
+    """
+    check_type = 'vals'
+    # Running function
+    catl_utils.check_input_params(input_var, var_name, check_type=check_type)
+
+#### ---------- Test `check_input_params` function - Error - Type -----------##
+
+input_arr = [   ('catl_type', 1),
+                ('hod_n', 'test'),
+                ('halotype', None),
+                ('clf_method', 'test'),
+                ('clf_seed', '10'),
+                ('dv', '1000'),
+                ('sample', 19),
+                ('type_am', 10),
+                ('cosmo_choice', 123),
+                ('perf_opt', 'None'),
+                ('remove_files', 'True'),
+                ('environ_name', 1)]
+@pytest.mark.parametrize('var_name, input_var', input_arr)
+def test_check_input_params(input_var, var_name):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`
+    for input parameters.
+
+    Parameters
+    ------------
+    input_var : `int`, `float`, `bool`, `str`
+        Input variable to be evaluated.
+
+    var_name : `str`
+        Name of the input parameter being evaluated. This variable name
+        must correspond to one of the keys in the `type` or `vals`
+        dictionaries.
+    """
+    check_type = 'type'
+    # Running function
+    with pytest.raises(TypeError):
+        catl_utils.check_input_params(input_var, var_name,
+            check_type=check_type)
+
+#### ---------- Test `check_input_params` function - Errors - Values --------##
+
+input_arr = [   ('catl_type', 'data_no'),
+                ('catl_type', 'mocks_test'),
+                ('hod_n', 11),
+                ('hod_n', 63),
+                ('hod_n', 103),
+                ('halotype', 'fof_alt'),
+                ('halotype', 'sos'),
+                ('clf_method', 12),
+                ('clf_method', 23),
+                ('clf_method', 43),
+                ('sample', '22'),
+                ('sample', '34'),
+                ('sample', '10'),
+                ('type_am', '1_mstar'),
+                ('type_am', '2_mr'),
+                ('cosmo_choice', 'LasDamas_old'),
+                ('cosmo_choice', 'Planck_new')]
+@pytest.mark.parametrize('var_name, input_var', input_arr)
+def test_check_input_params(input_var, var_name):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`
+    for input parameters.
+
+    Parameters
+    ------------
+    input_var : `int`, `float`, `bool`, `str`
+        Input variable to be evaluated.
+
+    var_name : `str`
+        Name of the input parameter being evaluated. This variable name
+        must correspond to one of the keys in the `type` or `vals`
+        dictionaries.
+    """
+    check_type = 'vals'
+    # Running function
+    with pytest.raises(ValueError):
+        catl_utils.check_input_params(input_var, var_name,
+            check_type=check_type)
+
+#### ---------- Test `check_input_params` function - Errors - KeyError --------##
+
+input_arr = [   ('catl_type_1', 'data_no'),
+                ('hod_n_test', 103),
+                ('_test_halotype', 'sos'),
+                ('1123_clf_method', 43),
+                ('_test_sample', '34'),
+                ('type_type_am', '2_mr'),
+                ('cosmo_choice_other_test', 'Planck_new')]
+@pytest.mark.parametrize('var_name, input_var', input_arr)
+def test_check_input_params(input_var, var_name):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`
+    for input parameters.
+
+    Parameters
+    ------------
+    input_var : `int`, `float`, `bool`, `str`
+        Input variable to be evaluated.
+
+    var_name : `str`
+        Name of the input parameter being evaluated. This variable name
+        must correspond to one of the keys in the `type` or `vals`
+        dictionaries.
+    """
+    check_type = 'vals'
+    # Running function
+    with pytest.raises(KeyError):
+        catl_utils.check_input_params(input_var, var_name,
+            check_type=check_type)
+
+
+
+
+
+
+
+
