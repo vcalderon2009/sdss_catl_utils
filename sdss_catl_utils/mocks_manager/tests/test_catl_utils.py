@@ -420,7 +420,7 @@ def test_catl_keys_prop_return_type_errors(catl_kind, catl_info, return_type):
 
 #### --------------- Test `check_input_params` function - Types -------------##
 
-input_arr = [   ('catl_type', 'data'),
+input_arr = [   ('catl_kind', 'data'),
                 ('hod_n', 1),
                 ('halotype', 'fof'),
                 ('clf_method', 1),
@@ -454,8 +454,8 @@ def test_check_input_params(input_var, var_name):
 
 #### --------------- Test `check_input_params` function - Values ------------##
 
-input_arr = [   ('catl_type', 'data'),
-                ('catl_type', 'mocks'),
+input_arr = [   ('catl_kind', 'data'),
+                ('catl_kind', 'mocks'),
                 ('hod_n', 1),
                 ('hod_n', 6),
                 ('hod_n', 9),
@@ -493,7 +493,7 @@ def test_check_input_params(input_var, var_name):
 
 #### ---------- Test `check_input_params` function - Error - Type -----------##
 
-input_arr = [   ('catl_type', 1),
+input_arr = [   ('catl_kind', 1),
                 ('hod_n', 'test'),
                 ('halotype', None),
                 ('clf_method', 'test'),
@@ -529,8 +529,8 @@ def test_check_input_params(input_var, var_name):
 
 #### ---------- Test `check_input_params` function - Errors - Values --------##
 
-input_arr = [   ('catl_type', 'data_no'),
-                ('catl_type', 'mocks_test'),
+input_arr = [   ('catl_kind', 'data_no'),
+                ('catl_kind', 'mocks_test'),
                 ('hod_n', 11),
                 ('hod_n', 63),
                 ('hod_n', 103),
@@ -570,7 +570,7 @@ def test_check_input_params(input_var, var_name):
 
 #### ---------- Test `check_input_params` function - Errors - KeyError --------##
 
-input_arr = [   ('catl_type_1', 'data_no'),
+input_arr = [   ('catl_kind_1', 'data_no'),
                 ('hod_n_test', 103),
                 ('_test_halotype', 'sos'),
                 ('1123_clf_method', 43),
@@ -598,6 +598,144 @@ def test_check_input_params(input_var, var_name):
     with pytest.raises(KeyError):
         catl_utils.check_input_params(input_var, var_name,
             check_type=check_type)
+
+#########-------------------------------------------------------------#########
+#########-------------------------------------------------------------#########
+
+#### --------------- Test `CatlUtils` function - Types -------------##
+
+catl_kind_arr    = ['data', 'mocks']
+hod_n_arr        = [1,2]
+halotype_arr     = ['so', 'fof']
+clf_method_arr   = [1, 2, 3]
+clf_seed_arr     = [1, 4]
+dv_arr           = np.arange(0.5, 2.0, 1.)
+sample_arr       = ['19', '20', '21']
+type_am_arr      = ['mr', 'mstar']
+cosmo_choice_arr = ['Planck', 'LasDamas']
+perf_opt_arr     = [True, False]
+remove_files_arr = [True, False]
+environ_name_arr = ['Env1']
+
+@pytest.mark.parametrize('catl_kind', catl_kind_arr)
+@pytest.mark.parametrize('hod_n', hod_n_arr)
+@pytest.mark.parametrize('halotype', halotype_arr)
+@pytest.mark.parametrize('clf_method', clf_method_arr)
+@pytest.mark.parametrize('clf_seed', clf_seed_arr)
+@pytest.mark.parametrize('dv', dv_arr)
+@pytest.mark.parametrize('sample', sample_arr)
+@pytest.mark.parametrize('type_am', type_am_arr)
+@pytest.mark.parametrize('cosmo_choice', cosmo_choice_arr)
+@pytest.mark.parametrize('perf_opt', perf_opt_arr)
+@pytest.mark.parametrize('remove_files', remove_files_arr)
+@pytest.mark.parametrize('environ_name', environ_name_arr)
+def test_CatlUtils_inputs(catl_kind, hod_n, halotype, clf_method, clf_seed,
+    dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
+    environ_name):
+    """
+    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.CatlUtils`
+    for input parameters.
+
+    Parameters
+    ------------
+    catl_kind : {``data``, ``mocks``} `str`
+        Kind of catalogues to download. This variable is set to
+        ``mocks`` by default.
+
+        Options:
+            - ``data``: Downloads the SDSS DR7 real catalogues.
+            - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
+
+    hod_n : `int`, optional
+        Number of the HOD model to use. This value is set to `0` by
+        default.
+
+    halotype : {'so', 'fof'}, `str`, optional
+        Type of dark matter definition to use. This value is set to
+        ``so`` by default.
+
+        Options:
+            - ``so``: Spherical Overdensity halo definition.
+            - ``fof``: Friends-of-Friends halo definition.
+
+    clf_method : {1, 2, 3}, `int`, optional
+        Method for assigning galaxy properties to mock galaxies.
+        This variable dictates how galaxies are assigned
+        luminosities or stellar masses based on their galaxy type
+        and host halo's mass. This variable is set to ``1`` by
+        default.
+
+        Options:
+            - ``1``: Independent assignment of (g-r) colour, sersic, and specific star formation rate (`logssfr`)
+            - ``2``: (g-r) colour dictates active/passive designation and draws values independently.
+            - ``3``: (g-r) colour dictates active/passive designation, and assigns other galaxy properties for that given galaxy.
+
+    clf_seed : `int`, optional
+        Value of the random seed used for the conditional luminosity function.
+        This variable is set to ``1235`` default.
+
+    dv : `float`, optional
+        Value for the ``velocity bias`` parameter. It is the difference
+        between the galaxy and matter velocity profiles.
+
+        .. math::
+            dv = \\frac{v_{g} - v_{c}}{v_{m} - v_{c}}
+
+        where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
+        matter velocity.
+
+    sample : {'19', '20', '21'}, `str`, optional
+        Luminosity of the SDSS volume-limited sample to analyze.
+        This variable is set to ``'19'`` by default.
+
+        Options:
+            - ``'19'``: :math:`M_r = 19` volume-limited sample
+            - ``'20'``: :math:`M_r = 20` volume-limited sample
+            - ``'21'``: :math:`M_r = 21` volume-limited sample
+
+    catl_type : {'mr', 'mstar'}, `str`, optional
+        Type of Abundance matching used in the catalogue. This
+        variable is set to ``'mr'`` by default.
+
+        Options:
+            - ``'mr'``: Luminosity-based abundance matching used
+            - ``'mstar'``: Stellar-mass-based abundance matching used.
+
+    cosmo_choice : { ``'LasDamas'``, ``'Planck'``} `str`, optional
+        Choice of cosmology to use. This variable is set to ``LasDamas``
+        by default.
+
+        Options:
+            - ``LasDamas`` : Uses the cosmological parameters from the 
+                `LasDamas <http://lss.phy.vanderbilt.edu/lasdamas/simulations.html>`_ simulations.
+            - ``Planck`` : Uses the Planck 2015 cosmology.
+
+    perf_opt : `bool`, optional
+        If `True`, it chooses to analyze the ``perfect`` version of
+        the synthetic galaxy/group galaxy catalogues. Otherwise,
+        it downloads the catalogues with group-finding errors
+        included. This variable is set to ``False`` by default.
+
+    environ_name : `str`
+        Name of the environment variable to assign to ``outdir``.
+        This variable is set to the default ``environ_name`` from
+        `~sdss_catl_utils.mocks_manager.mocks_default`
+    """
+    # Creating dictionary
+    input_dict = {  'catl_kind': catl_kind,
+                    'hod_n': hod_n,
+                    'halotype': halotype,
+                    'clf_method': clf_method,
+                    'clf_seed': clf_seed,
+                    'dv': dv,
+                    'sample': sample,
+                    'type_am': type_am,
+                    'cosmo_choice': cosmo_choice,
+                    'perf_opt': perf_opt,
+                    'remove_files': remove_files,
+                    'environ_name': environ_name}
+    ## Running function
+    obj_ii = catl_utils.CatlUtils(**input_dict)
 
 
 

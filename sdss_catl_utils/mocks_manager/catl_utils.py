@@ -546,7 +546,7 @@ def _get_input_params_dict():
     """
     ## Dictionary with input variables
     # Variable types
-    input_dict_type = { 'catl_type'    : (str),
+    input_dict_type = { 'catl_kind'    : (str),
                         'hod_n'        : (int),
                         'halotype'     : (str),
                         'clf_method'   : (int),
@@ -559,7 +559,7 @@ def _get_input_params_dict():
                         'remove_files' : (bool),
                         'environ_name' : (str)}
     # Variable inputs
-    input_dict_vals = { 'catl_type'    : ['data', 'mocks'],
+    input_dict_vals = { 'catl_kind'    : ['data', 'mocks'],
                         'hod_n'        : list(range(10)),
                         'halotype'     : ['fof', 'so'],
                         'clf_method'   : [1, 2, 3],
@@ -664,7 +664,7 @@ class CatlUtils(object):
     catalogues provided by ``sdss_catl_utils``, see ...
     """
     def __init__(self, **kwargs):
-        """
+        r"""
         Parameters
         ------------
         catl_kind : {``data``, ``mocks``} `str`
@@ -772,8 +772,50 @@ class CatlUtils(object):
         # Other variables
         self.sample_Mr    = 'Mr{0}'.format(self.sample)
         self.sample_s     = str(self.sample)
+        #
+        # Checking input parameters
+        self._check_input_parameters()
 
     # Checking input parameters to make sure they are `expected`
+    def _check_input_parameters(self):
+        r"""
+        Checks whether or not the input parameters are what is expected or not.
+        """
+        ## Checking for input TYPES
+        # `catl_kind`
+        check_input_params(self.catl_kind, 'catl_kind', check_type='type')
+        check_input_params(self.catl_kind, 'catl_kind', check_type='vals')
+        # `hod_n`
+        check_input_params(self.hod_n, 'hod_n', check_type='type')
+        check_input_params(self.hod_n, 'hod_n', check_type='vals')
+        # `halotype`
+        check_input_params(self.halotype, 'halotype', check_type='type')
+        check_input_params(self.halotype, 'halotype', check_type='vals')
+        # `clf_method`
+        check_input_params(self.clf_method, 'clf_method', check_type='type')
+        check_input_params(self.clf_method, 'clf_method', check_type='vals')
+        # `clf_seed`
+        check_input_params(self.clf_seed, 'clf_seed', check_type='type')
+        # `dv`
+        check_input_params(self.dv, 'dv', check_type='type')
+        # `sample`
+        check_input_params(self.sample, 'sample', check_type='type')
+        check_input_params(self.sample, 'sample', check_type='vals')
+        # `type_am`
+        check_input_params(self.type_am, 'type_am', check_type='type')
+        check_input_params(self.type_am, 'type_am', check_type='vals')
+        # `cosmo_choice`
+        check_input_params(self.cosmo_choice, 'cosmo_choice', check_type='type')
+        check_input_params(self.cosmo_choice, 'cosmo_choice', check_type='vals')
+        # `perf_opt`
+        check_input_params(self.perf_opt, 'perf_opt', check_type='type')
+        # `remove_files`
+        check_input_params(self.remove_files, 'remove_files', check_type='type')
+        # `environ_name`
+        check_input_params(self.environ_name, 'environ_name', check_type='type')
+
+
+
 
     # Main directory path - Path to which all catalogues are saved
     def main_dir(self):
@@ -809,7 +851,7 @@ class CatlUtils(object):
     # Location prefix
     def _catl_prefix(self, catl_type='memb', catl_kind='mocks',
         perf_opt=False):
-        """
+        r"""
         Prefix of the paths based on the type of catalogues and input
         parameters chosen.
 
@@ -923,7 +965,7 @@ class CatlUtils(object):
     # Location of galaxy/group catalogues with specified parameters
     def catls_dir(self, catl_type='memb', catl_kind='mocks',
         print_filedir=False):
-        """
+        r"""
         Location of the group and group galaxy catalogues with the specified
         parameters.
 
@@ -1016,7 +1058,7 @@ class CatlUtils(object):
     # Extract the list of catalogues
     def catl_arr_extract(self, catl_type='memb', catl_kind='mocks',
         ext='hdf5', print_filedir=False, return_len=False):
-        """
+        r"""
         Extracts the list of galaxy/group catalogues.
 
         Parameters
