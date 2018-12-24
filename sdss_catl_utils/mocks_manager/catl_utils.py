@@ -814,9 +814,6 @@ class CatlUtils(object):
         # `environ_name`
         check_input_params(self.environ_name, 'environ_name', check_type='type')
 
-
-
-
     # Main directory path - Path to which all catalogues are saved
     def main_dir(self):
         """
