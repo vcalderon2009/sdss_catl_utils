@@ -149,7 +149,7 @@ def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
         catl_objs = [gm_key, id_key, galtype]
     elif (return_type == 'dict'):
         catl_objs = {'gm_key': gm_key, 'id_key': id_key,
-                        'galtype_key':galtype_key}
+                        'galtype_key':galtype}
 
     return catl_objs
 
@@ -439,7 +439,7 @@ def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
     from groups with ``n > 10``, one can do:
 
     >>> from cosmo_utils.utils import file_readers as cfr
-    >>> from sdss_catl_utils.mock_manager import catl_clean_nmin
+    >>> from sdss_catl_utils.mocks_manager.catl_utils import catl_clean_nmin
     >>> nmin = 10 # Minimum number of galaxies in file
     >>> catl_pd = cfr.read_hdf5_file_to_pandas_DF('/path/to/file') # doctest: +SKIP
     >>> catl_mod = catl_clean_nmin(catl_pd, 'data', nmin=nmin) # doctest: +SKIP
