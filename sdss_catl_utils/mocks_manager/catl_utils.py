@@ -556,7 +556,6 @@ def _get_input_params_dict():
                         'type_am'      : (str),
                         'cosmo_choice' : (str),
                         'perf_opt'     : (bool),
-                        'cosmo_choice' : (str),
                         'remove_files' : (bool),
                         'environ_name' : (str)}
     # Variable inputs
@@ -643,11 +642,11 @@ def check_input_params(input_var, var_name, check_type='type'):
         check_dict = input_dict[check_type]
         # Checking if key exists
         if (var_name in list(check_dict.keys())):
-            if (input_var in check_dict[var_name]):
+            if not (input_var in check_dict[var_name]):
                 msg = '{0} `{1}` ({2}) is not a valid input! Valid: `{3}` type'
-                msg = msg.format(file_msg, var_name, type(input_var),
+                msg = msg.format(file_msg, var_name, input_var,
                         check_dict[var_name])
-                raise TypeError(msg)
+                raise ValueError(msg)
         else:
             # If `var_name` is not in dictionary
             msg = '{0} `{1}` is not in dictionary! Keys: `{2}`'
