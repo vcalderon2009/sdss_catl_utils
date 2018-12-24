@@ -10,12 +10,12 @@ __author__     = ['Victor Calderon']
 __copyright__  = ["Copyright 2018 Victor Calderon, "]
 __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
-__all__        = [  'CatlUtils',
-                    'catl_keys',
+__all__        = [  'catl_keys',
                     'catl_keys_prop',
                     'catl_clean',
                     'catl_clean_nmin',
-                    'check_input_params']
+                    'check_input_params',
+                    'CatlUtils']
 
 
 import os

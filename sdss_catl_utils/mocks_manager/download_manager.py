@@ -19,6 +19,7 @@ from cosmo_utils.utils import work_paths      as cwpaths
 from cosmo_utils.utils import web_utils       as cweb
 
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
+from sdss_catl_utils.mocks_manager.catl_utils import check_input_params
 
 class DownloadManager(object):
     """
@@ -138,6 +139,47 @@ class DownloadManager(object):
         # Other variables
         self.sample_Mr    = 'Mr{0}'.format(self.sample)
         self.sample_s     = str(self.sample)
+        #
+        # Checking input parameters
+        self._check_input_parameters()
+
+    # Checking input parameters to make sure they are `expected`
+    def _check_input_parameters(self):
+        r"""
+        Checks whether or not the input parameters are what is expected or not.
+        """
+        ## Checking for input TYPES
+        # `catl_kind`
+        check_input_params(self.catl_kind, 'catl_kind', check_type='type')
+        check_input_params(self.catl_kind, 'catl_kind', check_type='vals')
+        # `hod_n`
+        check_input_params(self.hod_n, 'hod_n', check_type='type')
+        check_input_params(self.hod_n, 'hod_n', check_type='vals')
+        # `halotype`
+        check_input_params(self.halotype, 'halotype', check_type='type')
+        check_input_params(self.halotype, 'halotype', check_type='vals')
+        # `clf_method`
+        check_input_params(self.clf_method, 'clf_method', check_type='type')
+        check_input_params(self.clf_method, 'clf_method', check_type='vals')
+        # `clf_seed`
+        check_input_params(self.clf_seed, 'clf_seed', check_type='type')
+        # `dv`
+        check_input_params(self.dv, 'dv', check_type='type')
+        # `sample`
+        check_input_params(self.sample, 'sample', check_type='type')
+        check_input_params(self.sample, 'sample', check_type='vals')
+        # `type_am`
+        check_input_params(self.type_am, 'type_am', check_type='type')
+        check_input_params(self.type_am, 'type_am', check_type='vals')
+        # `cosmo_choice`
+        check_input_params(self.cosmo_choice, 'cosmo_choice', check_type='type')
+        check_input_params(self.cosmo_choice, 'cosmo_choice', check_type='vals')
+        # `perf_opt`
+        check_input_params(self.perf_opt, 'perf_opt', check_type='type')
+        # `remove_files`
+        check_input_params(self.remove_files, 'remove_files', check_type='type')
+        # `environ_name`
+        check_input_params(self.environ_name, 'environ_name', check_type='type')
 
     # Writes the location of catalogues as environment variable
     def _environ_variable_write(self, outdir):
