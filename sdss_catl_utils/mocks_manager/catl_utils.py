@@ -25,6 +25,7 @@ from collections import Counter
 from cosmo_utils.utils import file_utils      as cfutils
 from cosmo_utils.utils import work_paths      as cwpaths
 from cosmo_utils.utils import web_utils       as cweb
+from cosmo_utils.utils import file_readers    as cfreaders
 
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
 from sdss_catl_utils.custom_exceptions import SDSSCatlUtils_Error
@@ -1192,23 +1193,106 @@ class CatlUtils(object):
         SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
             Program exception if input parameters are `not` accepted.
         """
+        file_msg = cfutils.Program_Msg(__file__)
+        ## Checking input parameters
+        # `catl_idx` - Type
+        catl_idx_arr = (float, int, np.int64, np.int32, np.float32, np.float64)
+        if not (isinstance(catl_idx, int)):
+            msg = '{0} `catl_idx` ({1}) is not a valid input type!'
+            msg = msg.format(file_msg, type(catl_idx))
+            raise TypeError(msg)
+        else:
+            catl_idx = int(catl_idx)
+        # `catl_idx` - Value
+        idx_range = [0, 100]
+        if not ((catl_idx >= idx_range[0]) and (catl_idx < idx_range[1])):
+            msg = '{0} `catl_idx` ({1}) is not within the acceptable range! '
+            msg = 'Range: `{2}`'
+            msg = msg.format(file_msg, catl_idx, idx_range)
+            raise ValueError(msg)
+        # `return_memb_group` - Type
+        if not (isinstance(return_memb_group, bool)):
+            msg = '{0} `return_memb_group` ({1}) is not a valid input type!'
+            msg = msg.format(file_msg, type(return_memb_group))
+            raise TypeError(msg)
+        # `print_filedir` - Type
+        if not (isinstance(print_filedir, bool)):
+            msg = '{0} `print_filedir` ({1}) is not a valid input type!'
+            msg = msg.format(file_msg, type(print_filedir))
+            raise TypeError(msg)
+        ##
+        ## Extracting catalogues given input parameters
+        (   memb_arr,
+            memb_len) = self.catl_arr_extract(  catl_type='memb',
+                                                catl_kind=self.catl_kind,
+                                                return_len=True,
+                                                print_filedir=print_filedir)
+        #
+        # Checking if `catl_idx` is less than `memb_len`
+        if (catl_idx > (memb_len - 1)):
+            msg = '{0} `catl_idx` ({1}) is OUT of range ({2})!'
+            msg = msg.format(file_msg, catl_idx, memb_len)
+            raise ValueError(msg)
+        #
+        # Extracting group galaxy catalogue
+        memb_path = memb_arr[catl_idx]
+        # ith galaxy group catalogue
+        group_path_base = self.catls_dir(   catl_type='group',
+                                            catl_kind=self.catl_kind,
+                                            print_filedir=print_filedir)
+        # Modifying path to group catalogue
+        if (self.catl_kind == 'mocks'):
+            group_path = os.path.join(  group_path_base,
+                            os.path.basename(memb_path).replace(
+                                'memb','group'))
+        elif (self.catl_kind == 'data'):
+            group_path = os.path.join(  group_path_base,
+                            os.path.basename(memb_path).replace(
+                                'Gals', 'Group'))
+        # Checking if files exist
+        cfutils.File_Exists(group_path)
+        # Reading in member and group galaxy catalogues into DataFrames
+        memb_pd  = cfreaders.read_hdf5_file_to_pandas_DF(memb_path)
+        group_pd = cfreaders.read_hdf5_file_to_pandas_DF(group_path)
+        # Column keys for catalogues
+        (   gm_key,
+            id_key,
+            galtype_key) = catl_keys(   self.catl_kind,
+                                        perf_opt=self.perf_opt,
+                                        return_type='list')
+        # Matching keys from the group catalogue
+        memb_id_unq  = np.unique(memb_pd[id_key].values)
+        group_id_unq = np.unique(group_pd[id_key].values)
+        if np.array_equal(memb_id_unq, group_id_unq):
+            # Group column names
+            group_cols = np.sort(group_pd.columns.values)
+            # Sorting `memb_pd` by `id_key`
+            # Member galaxy catalogue
+            memb_pd.sort_values(by=id_key, inplace=True)
+            memb_pd.reset_index(drop=True, inplace=True)
+            # Group galaxy catalogue
+            group_pd.sort_values(by=id_key, inplace=True)
+            group_pd.reset_index(drop=True, inplace=True)
+            # Reanming columns
+            g_cols_dict = {ii: 'GG_' + ii for ii in group_cols}
+            group_pd.rename(columns=g_cols_dict, inplace=True)
+            group_pd.rename(columns={'GG_' + id_key: id_key}, inplace=True)
+            # Merging the 2 DataFrames
+            merged_pd = pd.merge(   left=memb_pd,
+                                    right=group_pd,
+                                    how='left',
+                                    left_on=id_key,
+                                    right_on=id_key)
+        else:
+            msg  = '{0} Lengths of the 2 DataFrames (`memb_pd`, `group_pd`) '
+            msg += 'do not match! `memb_pd`: {1}, `group_pd`: {2}!'
+            msg  = msg.format(file_msg, len(memb_id_unq), len(group_id_unq))
+            raise SDSSCatlUtils_Error(msg)
+        #
+        # Returning DataFrames if necessary
+        if return_memb_group:
+            return_obj = (merged_pd, memb_pd, group_pd)
+        else:
+            return_obj = merged_pd
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return return_obj
