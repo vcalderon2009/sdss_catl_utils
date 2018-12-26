@@ -1,4 +1,4 @@
-|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |License|
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |License| |Coverage|
 
 .. _main_docs:
 
@@ -69,6 +69,10 @@ Reference
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
+.. |Coverage| image:: https://coveralls.io/repos/github/vcalderon2009/sdss_catl_utils/badge.svg?branch=master
+   :target: https://coveralls.io/github/vcalderon2009/sdss_catl_utils?branch=master
+   :alt: Coveralls Status
+
 .. |Release| image:: https://img.shields.io/github/release/vcalderon2009/sdss_catl_utils.svg
    :target: https://github.com/vcalderon2009/sdss_catl_utils/releases/latest
    :alt: Latest Release
@@ -88,10 +92,6 @@ Reference
 .. |RTD| image:: https://readthedocs.org/projects/sdss-catls-utils/badge/?version=latest
    :target: https://sdss-catls-utils.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
-.. |Coverage| image:: https://coveralls.io/repos/github/vcalderon2009/sdss_catl_utils/badge.svg?branch=master
-   :target: https://coveralls.io/github/vcalderon2009/sdss_catl_utils?branch=master
-   :alt: Coveralls Status
 
 .. |License| image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
    :target: https://opensource.org/licenses/BSD-3-Clause
