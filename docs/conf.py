@@ -137,6 +137,10 @@ html_title = '{0} v{1}'.format(project, release)
 # Output file base name for HTML help builder.
 htmlhelp_basename = project + 'doc'
 
+# Adding pandas `key` to `intersphinx_mapping
+intersphinx_mapping['pandas'] = (
+    'https://pandas.pydata.org/pandas-docs/stable/',
+    (None, 'http://pandas.pydata.org/pandas-docs/stable/objects.inv'))
 
 # -- Options for LaTeX output -------------------------------------------------
 
