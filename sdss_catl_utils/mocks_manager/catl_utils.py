@@ -1492,7 +1492,7 @@ class CatlUtils(object):
 
         >>> params_dict = {'catl_kind': 'mocks', 'halotype': 'fof', 'clf_method': 2}
         >>> catl_obj = CatlUtils(**params_dict) # doctest: +SKIP
-        >>> merged_pd = catl_obj.catl_merge()
+        >>> merged_pd = catl_obj.catl_merge() # doctest: +SKIP
 
         Additionally, one could recover the ``member`` and ``group``
         catalogues as well:
