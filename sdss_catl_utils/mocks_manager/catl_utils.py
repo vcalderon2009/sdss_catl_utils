@@ -1235,7 +1235,21 @@ class CatlUtils(object):
 
         Examples
         ----------
-        `catls_dir` can be used
+        `catls_dir` can be used to explore the directories that host different
+        `kinds` of catalogues, i.e. galaxy-, member-, and group-catalogues
+        for various combinations of input parameters.
+
+        For example, if one wants to read the ``member`` galaxy catalogue,
+        i.e. a catalogue with both `galaxy` and `group` information, for
+        ``mocks`` catalogues, one could easily write:
+
+        >>> memb_dir = catls_dir(catl_type='memb', catl_kind='mocks') # doctest: +SKIP
+
+        This will return the path to the `member` galaxy catalogues directory
+        with the synthetic catalogues in it. This method only returns
+        the path of the directory, and not the path to the actual
+        files in the directory. To accomplish this, one would need to use
+        the function `catl_arr_extract`.
         """
         ## Checking input parameters
         # `catl_type` - Value
@@ -1302,7 +1316,7 @@ class CatlUtils(object):
 
         Parameters
         --------------
-        catl_type : {'gal', 'memb', 'group'}, `str`
+        catl_type : {``gal``, ``memb``, ``group``}, `str`
             Option for which kind of catalogue is being analyzed. This
             variable is set to ``memb`` by default.
 
@@ -1334,6 +1348,29 @@ class CatlUtils(object):
             Array of the paths of the galaxy/group catalogues with specified
             parameters. The shape of the variable is (`N`,), where `N`,
             is the number of catalogues in the directory.
+
+        Examples
+        -----------
+        This function is able to return the path to individual kinds of
+        galaxy and group catalogues that meet some criteria based on the
+        different combinations of input parameters.
+
+        For example, if one wants to get the paths to the ``mocks`` ``member``
+        galaxy catalogues with a ``halotype = 'fof'`` prescription, and
+        following a ``clf_method = 2`` methodology, one could retrieve them
+        by:
+        
+        >>> params_dict = {'catl_kind='mocks', halotype='fof', 'clf_method'=2}
+        >>> catl_obj = CatlUtils(**params_dict) # doctest: +SKIP
+        >>> catl_paths = catl_arr_extract(catl_type='memb', catl_kind='mocks', halotype='fof') # doctest: +SKIP
+
+        This will return the paths to the `member` galaxy catalogues that
+        meet those prescribed parameters.
+
+        Notes
+        ---------
+        If no files are present or exist in the given directory, it will
+        return an ``empty`` array of files.
         """
         ## Checking input parameters
         # `catl_type` - Value
@@ -1434,6 +1471,36 @@ class CatlUtils(object):
         ------------
         SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
             Program exception if input parameters are `not` accepted.
+
+        Examples
+        -----------
+        This function will merge the ``member`` and ``group`` catalogues into
+        a single `pandas.DataFrame` object, and it can be used to merge
+        two existing catalogues. For example, to merge the `member` and
+        `group` catalogues using the *default* parameters, one can easily
+        write:
+        
+        >>> merged_pd = catl_merge() # doctest: +SKIP
+
+        The resulting object will consist of a merge between the member and
+        group catalogues, with the columns pertaining to **group** properties
+        having a ``GG_`` attached to their names.
+
+        However, if one wants to merge two **mock** catalogues with
+        a ``clf_method = 2`` and ``halotype = 'fof'`` prescription, one could
+        easily write this:
+
+        >>> params_dict = {'catl_kind='mocks', halotype='fof', 'clf_method'=2}
+        >>> catl_obj = CatlUtils(**params_dict) # doctest: +SKIP
+        >>> merged_pd = catl_obj.catl_merge()
+
+        Additionally, one could recover the ``member`` and ``group``
+        catalogues as well:
+
+        >>> merged_pd, memb_pd, group_pd = catl_obj.catl_merge(return_memb_group=True) # doctest: +SKIP
+
+        For more information and examples, please refer to
+        :ref:`quickstart_getting_started`.
         """
         file_msg = cfutils.Program_Msg(__file__)
         ## Checking input parameters
