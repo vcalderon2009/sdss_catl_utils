@@ -1360,7 +1360,7 @@ class CatlUtils(object):
         following a ``clf_method = 2`` methodology, one could retrieve them
         by:
         
-        >>> params_dict = {'catl_kind='mocks', halotype='fof', 'clf_method'=2}
+        >>> params_dict = {'catl_kind': 'mocks', 'halotype': 'fof', 'clf_method': 2}
         >>> catl_obj = CatlUtils(**params_dict) # doctest: +SKIP
         >>> catl_paths = catl_arr_extract(catl_type='memb', catl_kind='mocks', halotype='fof') # doctest: +SKIP
 
@@ -1490,7 +1490,7 @@ class CatlUtils(object):
         a ``clf_method = 2`` and ``halotype = 'fof'`` prescription, one could
         easily write this:
 
-        >>> params_dict = {'catl_kind='mocks', halotype='fof', 'clf_method'=2}
+        >>> params_dict = {'catl_kind': 'mocks', 'halotype': 'fof', 'clf_method': 2}
         >>> catl_obj = CatlUtils(**params_dict) # doctest: +SKIP
         >>> merged_pd = catl_obj.catl_merge()
 
