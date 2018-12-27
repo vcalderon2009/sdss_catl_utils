@@ -18,7 +18,6 @@ __all__        = [  'catl_keys',
                     'check_input_params',
                     'CatlUtils']
 
-
 import os
 import numpy as np
 import pandas as pd
@@ -925,6 +924,27 @@ class CatlUtils(object):
         ----------
 
         >>> from sdss_catl_utils.mocks_manager.catl_utils import CatlUtils
+
+        If one wants to initialize an ``catalogue`` object with the default
+        input parameters, one could write:
+
+        >>> catl_obj = CatlUtils() # Initialzing catalogue object
+
+        However, if one wants to have a `modified` version of ``catl_obj``,
+        one can pass a dictionary with the proper set of input parameters:
+
+        >>> params_d = {'catl_kind': 'mocks', 'clf_method': 3, 'clf_seed': 123}
+        >>> catl_obj = CatlUtils(**params_d)
+
+        This will create an `catalogue object` that corresponds to ``mocks``
+        catalogues with ``clf_method = 3`` and ``clf_seed = 123``.
+        
+        Notes
+        ---------
+
+        There are many combinations of parameters that could be performed.
+        `However, note that not all variations exist and would not be
+        available for download/analysis`!
         """
         super().__init__()
         # Assigning variables
@@ -943,9 +963,10 @@ class CatlUtils(object):
         # Other variables
         self.sample_Mr    = 'Mr{0}'.format(self.sample)
         self.sample_s     = str(self.sample)
-        #
         # Checking input parameters
         self._check_input_parameters()
+        # Dictionary of input parameters
+        self.param_dict = self.get_params_dict()
 
     # Checking input parameters to make sure they are `expected`
     def _check_input_parameters(self):
@@ -989,6 +1010,8 @@ class CatlUtils(object):
     def main_dir(self):
         """
         Path to the main directory, in which all catalogues are stored.
+        This directory depends on your installation of `SDSS_Catl_Utils`
+        and on your current working space.
 
         Returns
         ---------
@@ -996,6 +1019,24 @@ class CatlUtils(object):
             Path to the main directory, in which all catalogues are stored.
             It uses the environment variable ``environ_name`` from
             the class.
+
+        Examples
+        ----------
+        The main directory of the catalogues can be easily accessed after
+        having created an object for the combination of input parameters
+        for the catalogues.
+        
+        >>> from sdss_catl_utils.mocks_manager.catl_utils import CatlUtils
+        >>> catl_params_dict = {'catl_kind': 'mocks', 'clf_seed': 3} # Catalogue parameters
+        >>> catl_obj = CatlUtils(**catl_params_dict) # Initialing object
+
+        One can access the directory, under which the galaxy-
+        and group-catalogues are saved, by typing:
+
+        >>> catl_obj.main_dir() # doctest: +SKIP
+
+        This will return the path of the directory.
+
         """
         if os.environ.get(self.environ_name):
             main_dirpath = os.path.join(os.environ[self.environ_name],
@@ -1015,6 +1056,78 @@ class CatlUtils(object):
             raise ValueError(msg)
 
         return main_dirpath
+
+    # Get dictionary of input parameters
+    def get_params_dict(self):
+        r"""
+        Gets the dictionary of input parameters for the given model.
+
+        Returns
+        ---------
+        param_dict : `dict`
+            Dictionary of input parameters for the chosen combination of
+            parameters.
+
+        Examples
+        ----------
+        After having initializing an `CatlUtils` object, one can easily
+        recover the set of input parameters used.
+
+        >>> from sdss_catl_utils.mocks_manager.catl_utils import CatlUtils
+        >>> catl_params_dict = {'catl_kind': 'mocks', 'clf_seed': 3} # Catalogue parameters
+        >>> catl_obj = CatlUtils(**catl_params_dict) # Initialing object
+
+        The dictionary of parameters is saved as ``self.param_dict`` for
+        the class object. It can be easily accessed by:
+
+        >>> catl_obj.param_dict # doctest: +SKIP
+
+        Or, it can also be accessed as:
+
+        >>> catl_obj.get_params_dict() # doctest: +SKIP
+        
+        For example, in order to print out the list of input parameters,
+        one can do the following:
+
+        >>> param_dict = catl_obj.param_dict # doctest: +SKIP
+        >>> param_dict # doctest: +SKIP
+        {'catl_kind': 'mocks',
+         'hod_n': 0,
+         'halotype': 'fof',
+         'clf_method': 1,
+         'clf_seed': 3,
+         'dv': 1.0,
+         'sample': '19',
+         'type_am': 'mr',
+         'cosmo_choice': 'LasDamas',
+         'perf_opt': False,
+         'remove_files': False,
+         'environ_name': 'sdss_catl_path',
+         'sample_Mr': 'Mr19',
+         'sample_s': '19'}
+
+        This dictionary can now be used in other parts of one's analysis,
+        or as a reference of the parameters used.
+        """
+        # Initializing dictionary
+        param_dict = {}
+        # Populating dictionary
+        param_dict['catl_kind'   ] = self.catl_kind
+        param_dict['hod_n'       ] = self.hod_n
+        param_dict['halotype'    ] = self.halotype
+        param_dict['clf_method'  ] = self.clf_method
+        param_dict['clf_seed'    ] = self.clf_seed
+        param_dict['dv'          ] = self.dv
+        param_dict['sample'      ] = self.sample
+        param_dict['type_am'     ] = self.type_am
+        param_dict['cosmo_choice'] = self.cosmo_choice
+        param_dict['perf_opt'    ] = self.perf_opt
+        param_dict['remove_files'] = self.remove_files
+        param_dict['environ_name'] = self.environ_name
+        param_dict['sample_Mr'   ] = self.sample_Mr
+        param_dict['sample_s'    ] = self.sample_s
+
+        return param_dict
 
     # Location prefix
     def _catl_prefix(self, catl_type='memb', catl_kind='mocks',
@@ -1113,6 +1226,16 @@ class CatlUtils(object):
         catls_dirpath : `str`
             Path to the location of the group and galaxy catalogues with
             the specified parameters.
+
+        Notes
+        ---------
+        This method can be used to access the different `kinds` of
+        catalogues, i.e. galaxy-, member-, and group-catalogues for different
+        combinations of input parameters.
+
+        Examples
+        ----------
+        `catls_dir` can be used
         """
         ## Checking input parameters
         # `catl_type` - Value
@@ -1415,3 +1538,4 @@ class CatlUtils(object):
             return_obj = merged_pd
 
         return return_obj
+
