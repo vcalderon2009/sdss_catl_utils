@@ -3,7 +3,7 @@
 
 # Victor Calderon
 # Created      : 2018_12-12
-# Last Modified: 2018_12-18
+# Last Modified: 2018_12-28
 # Vanderbilt University
 from __future__ import absolute_import, division, print_function 
 __author__     = ['Victor Calderon']
@@ -13,15 +13,21 @@ __maintainer__ = ['Victor Calderon']
 __all__        = [  'DownloadManager']
 
 
+# Importing main modules and packages
 import os
+
+# Cosmo-Utils
 from cosmo_utils.utils import file_utils      as cfutils
 from cosmo_utils.utils import work_paths      as cwpaths
 from cosmo_utils.utils import web_utils       as cweb
 
+# Main package
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
 from sdss_catl_utils.mocks_manager.catl_utils import check_input_params
+from sdss_catl_utils.mocks_manager.catl_utils import catl_prefix_main
+from sdss_catl_utils.models.catl_models import CatlClassTemplate
 
-class DownloadManager(object):
+class DownloadManager(CatlClassTemplate):
     """
     Class used to scrape the web for galaxy and group galaxy
     catalogue data and cache the downloaded catalogues.
@@ -122,64 +128,8 @@ class DownloadManager(object):
 
         >>> from sdss_catl_utils.mocks_manager.download_manager import DownloadManager
         """
-        super().__init__()
-        # Assigning variables
-        self.catl_kind    = kwargs.get('catl_kind', md.catl_kind)
-        self.hod_n        = kwargs.get('hod_n', md.hod_n)
-        self.halotype     = kwargs.get('halotype', md.halotype)
-        self.clf_method   = kwargs.get('clf_method', md.clf_method)
-        self.clf_seed     = kwargs.get('clf_seed', md.clf_seed)
-        self.dv           = kwargs.get('dv', md.dv)
-        self.sample       = kwargs.get('sample', md.sample)
-        self.type_am      = kwargs.get('type_am', md.type_am)
-        self.cosmo_choice = kwargs.get('cosmo_choice', md.cosmo_choice)
-        self.perf_opt     = kwargs.get('perf_opt', md.perf_opt)
-        self.remove_files = kwargs.get('remove_files', md.remove_files)
-        self.environ_name = kwargs.get('environ_name', md.environ_name)
-        # Other variables
-        self.sample_Mr    = 'Mr{0}'.format(self.sample)
-        self.sample_s     = str(self.sample)
-        #
-        # Checking input parameters
-        self._check_input_parameters()
-
-    # Checking input parameters to make sure they are `expected`
-    def _check_input_parameters(self):
-        r"""
-        Checks whether or not the input parameters are what is expected or not.
-        """
-        ## Checking for input TYPES
-        # `catl_kind`
-        check_input_params(self.catl_kind, 'catl_kind', check_type='type')
-        check_input_params(self.catl_kind, 'catl_kind', check_type='vals')
-        # `hod_n`
-        check_input_params(self.hod_n, 'hod_n', check_type='type')
-        check_input_params(self.hod_n, 'hod_n', check_type='vals')
-        # `halotype`
-        check_input_params(self.halotype, 'halotype', check_type='type')
-        check_input_params(self.halotype, 'halotype', check_type='vals')
-        # `clf_method`
-        check_input_params(self.clf_method, 'clf_method', check_type='type')
-        check_input_params(self.clf_method, 'clf_method', check_type='vals')
-        # `clf_seed`
-        check_input_params(self.clf_seed, 'clf_seed', check_type='type')
-        # `dv`
-        check_input_params(self.dv, 'dv', check_type='type')
-        # `sample`
-        check_input_params(self.sample, 'sample', check_type='type')
-        check_input_params(self.sample, 'sample', check_type='vals')
-        # `type_am`
-        check_input_params(self.type_am, 'type_am', check_type='type')
-        check_input_params(self.type_am, 'type_am', check_type='vals')
-        # `cosmo_choice`
-        check_input_params(self.cosmo_choice, 'cosmo_choice', check_type='type')
-        check_input_params(self.cosmo_choice, 'cosmo_choice', check_type='vals')
-        # `perf_opt`
-        check_input_params(self.perf_opt, 'perf_opt', check_type='type')
-        # `remove_files`
-        check_input_params(self.remove_files, 'remove_files', check_type='type')
-        # `environ_name`
-        check_input_params(self.environ_name, 'environ_name', check_type='type')
+        # Super class from template
+        super(DownloadManager, self).__init__(**kwargs)
 
     # Writes the location of catalogues as environment variable
     def _environ_variable_write(self, outdir):
@@ -407,7 +357,7 @@ class DownloadManager(object):
     # Prefix of the catalogues being downloaded
     def _catl_prefix(self, catl_type='memb', catl_kind='mocks',
         perf_opt=False):
-        """
+        r"""
         Prefix of the paths based on the type of catalogues and input
         parameters chosen.
 
@@ -431,7 +381,7 @@ class DownloadManager(object):
                 - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
 
         perf_opt : `bool`, optional
-            If True, it chooses to analyze the ``perfect`` version of
+            If `True`, it chooses to analyze the ``perfect`` version of
             the synthetic galaxy/group galaxy catalogues. Otherwise,
             it downloads the catalogues with group-finding errors
             included. This variable is set to ``False`` by default.
@@ -443,78 +393,26 @@ class DownloadManager(object):
             input parameters.
         """
         ## Checking input parameters
-        # `catl_type` - Input variable
-        catl_type_arr = ['gal', 'memb', 'group']
-        if not (catl_type in catl_type_arr):
-            msg = '>>> `catl_type` ({0}) is not a valid input!'
-            msg = msg.format(catl_type)
-            raise ValueError(msg)
-        # `catl_type` - Type
-        if not (isinstance(catl_type, str)):
-            msg = '>>> `catl_type` ({0}) is not a valid type!'
-            msg = msg.format(type(catl_type))
-            raise TypeError(msg)
-        # `catl_kind` - Input variable
-        catl_kind_arr = ['data', 'mocks']
-        if not (catl_kind in catl_kind_arr):
-            msg = '>>> `catl_kind` ({0}) is not a valid input!'
-            msg = msg.format(catl_kind)
-            raise ValueError(msg)
-        # `catl_kind` - Type
-        if not (isinstance(catl_kind, str)):
-            msg = '>>> `catl_kind` ({0}) is not a valid type!'
-            msg = msg.format(type(catl_kind))
-            raise TypeError(msg)
-        # `perf_opt` - Type
-        if not (isinstance(perf_opt, bool)):
-            msg = '`perf_opt` ({0}) is not a valid type!'
-            msg = msg.format(type(perf_opt))
-            raise TypeError(msg)
+        # `catl_type` - Type and Value
+        check_input_params(catl_type, 'catl_type', check_type='type')
+        check_input_params(catl_type, 'catl_type', check_type='vals')
+        # `catl_kind` - Type and Value
+        check_input_params(catl_kind, 'catl_kind', check_type='type')
+        check_input_params(catl_kind, 'catl_kind', check_type='vals')
+        # `perf_opt`  - Type
+        check_input_params(perf_opt, 'perf_opt', check_type='type')
         ##
-        ## Option for which type of catalogue to download
-        catl_type_dict = {  'gal'  : 'galaxy_catalogues',
-                            'memb' : 'member_galaxy_catalogues',
-                            'group': 'group_galaxy_catalogues',
-                            'perf_group': 'perfect_group_galaxy_catalogues',
-                            'perf_memb' : 'perfect_member_galaxy_catalogues'}
-        # Deciding which folder to use
-        if (catl_type == 'gal'):
-            catl_type_str = 'gal'
-        elif (catl_type in ['memb', 'group']):
-            if perf_opt:
-                # Member galaxies
-                if (catl_type == 'memb'):
-                    catl_type_str = 'perf_memb'
-                # Groups
-                elif (catl_type == 'group'):
-                    catl_type_str = 'perf_group'
-            else:
-                # Member galaxies
-                if (catl_type == 'memb'):
-                    catl_type_str = 'memb'
-                # Groups
-                elif (catl_type == 'group'):
-                    catl_type_str = 'group'
-        ##
-        ## Parsing prefix path
-        # `Data`
-        if (catl_kind == 'data'):
-            catl_prefix = os.path.join( 'data',
-                                        self.type_am,
-                                        self.sample_Mr,
-                                        catl_type_dict[catl_type_str])
-        # `Mocks`
-        if (catl_kind == 'mocks'):
-            catl_prefix = os.path.join(
-                                    'mocks',
-                                    'halos_{0}'.format(self.halotype),
-                                    'dv_{0}'.format(self.dv),
-                                    'hod_model_{0}'.format(self.hod_n),
-                                    'clf_seed_{0}'.format(self.clf_seed),
-                                    'clf_method_{0}'.format(self.clf_method),
-                                    self.type_am,
-                                    self.sample_Mr,
-                                    catl_type_dict[catl_type_str])
+        ## Catalogue prefix
+        catl_prefix = catl_prefix_main( catl_type=catl_type,
+                                        catl_kind=catl_kind,
+                                        perf_opt=perf_opt,
+                                        hod_n=self.hod_n,
+                                        halotype=self.halotype,
+                                        clf_method=self.clf_method,
+                                        clf_seed=self.clf_seed,
+                                        dv=self.dv,
+                                        sample=self.sample,
+                                        type_am=self.type_am)
 
         return catl_prefix
 
@@ -753,42 +651,4 @@ class DownloadManager(object):
                                             create_dir=True,
                                             check_exist=True,
                                             remove_files=self.remove_files)
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

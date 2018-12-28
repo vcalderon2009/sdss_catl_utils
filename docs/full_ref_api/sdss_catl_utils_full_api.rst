@@ -13,3 +13,9 @@ Comprehensive SDSS_Catl_Utils Reference/API
 .. automodapi:: sdss_catl_utils.mocks_manager.catl_utils
     :no-inheritance-diagram:
 
+.. .. automodapi:: sdss_catl_utils.models
+..     :no-inheritance-diagram:
+
+.. .. automodapi:: sdss_catl_utils.models.catl_models
+..     :no-inheritance-diagram:
+
