@@ -55,7 +55,7 @@ def test_CatlUtils_inputs_types(catl_kind, hod_n, halotype, clf_method,
     clf_seed, dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
     environ_name):
     """
-    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.CatlUtils`
+    Checks the function `~sdss_catl_utils.models.catl_models.CatlUtils`
     for input parameters.
 
     Parameters
@@ -157,7 +157,7 @@ def test_CatlUtils_inputs_types(catl_kind, hod_n, halotype, clf_method,
                     'remove_files': remove_files,
                     'environ_name': environ_name}
     ## Running function
-    obj_ii = catl_utils.CatlUtils(**input_dict)
+    obj_ii = catl_models.CatlUtils(**input_dict)
 
 #### ------------- Test `CatlUtils` function - Error - Types --------------- ##
 
@@ -181,7 +181,7 @@ def test_CatlUtils_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
     clf_seed, dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
     environ_name):
     """
-    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.CatlUtils`
+    Checks the function `~sdss_catl_utils.models.catl_models.CatlUtils`
     for input parameters.
 
     Parameters
@@ -284,7 +284,7 @@ def test_CatlUtils_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
                     'environ_name': environ_name}
     ## Running function
     with pytest.raises(TypeError):
-        obj_ii = catl_utils.CatlUtils(**input_dict)
+        obj_ii = catl_models.CatlUtils(**input_dict)
 
 #### ------------- Test `CatlUtils` function - Error - Values --------------- ##
 
@@ -311,7 +311,7 @@ def test_CatlUtils_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
     clf_seed, dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
     environ_name):
     """
-    Checks the function `~sdss_catl_utils.mocks_manager.catl_utils.CatlUtils`
+    Checks the function `~sdss_catl_utils.models.catl_models.CatlUtils`
     for input parameters.
 
     Parameters
@@ -414,4 +414,4 @@ def test_CatlUtils_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
                     'environ_name': environ_name}
     ## Running function
     with pytest.raises(ValueError):
-        obj_ii = catl_utils.CatlUtils(**input_dict)
+        obj_ii = catl_models.CatlUtils(**input_dict)
