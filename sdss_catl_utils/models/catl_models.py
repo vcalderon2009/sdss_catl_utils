@@ -12,7 +12,9 @@ __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
 __all__        = [  'DownloadManager',
                     'CatlUtils',
-                    'SDSSConformity']
+                    'SDSSConformity',
+                    'SDSSCatlAnalysis',
+                    'SDSSMLAnalysis']
 """
 Compilation of different models corresponding to the set of catalogues used
 in various of the Calderon et al. (2018, 2019) papers and analyses.
@@ -28,6 +30,8 @@ from   abc import ABCMeta
 # Cosmo-Utils
 from cosmo_utils.utils import file_utils      as cfutils
 from cosmo_utils.utils import file_readers    as cfreaders
+from cosmo_utils.utils import work_paths      as cwpaths
+from cosmo_utils.utils import web_utils       as cweb
 
 # Main package
 from sdss_catl_utils.mocks_manager import catl_utils
@@ -531,7 +535,8 @@ class DownloadManager(CatlClassTemplate):
             return catl_url, catl_files_url
 
     # Downloads the catalogues to the corresponding Output directory
-    def catl_download(self, outdir='./', download_type='all', ext='hdf5'):
+    def catl_download(self, outdir='./', download_type='all', ext='hdf5',
+        print_outdir=False):
         """
         Downloads the corresponding catalogues to the designated folder.
 
@@ -555,6 +560,10 @@ class DownloadManager(CatlClassTemplate):
         ext : {'hdf5'} `str`
             File extension used for the catalogues. This variable is set
             to ``hdf5`` by default.
+
+        print_outdir : `bool`, optional
+            If `True`, it prints out the path to the output directories
+            of the catalogues.
         
         Examples
         ----------
@@ -567,6 +576,7 @@ class DownloadManager(CatlClassTemplate):
         >>> A.catl_download(outdir='./', download_type='all') # doctest: +SKIP
         >>>
         """
+        file_msg = cfutils.Program_Msg(__file__)
         ## Checking input parameters
         # `download_type` - Value
         download_type_arr = ['all', 'data', 'mocks']
@@ -595,16 +605,6 @@ class DownloadManager(CatlClassTemplate):
             msg = '`ext` ({0}) is not a valid input parameter!'
             msg = msg.format(ext)
             raise ValueError(msg)
-        # `check_exist` - Type
-        if not (isinstance(check_exist, bool)):
-            msg = '`check_exist` ({0}) is not a valid input type!'
-            msg = msg.format(type(check_exist))
-            raise TypeError(msg)
-        # `create_dir` - Type
-        if not (isinstance(create_dir, bool)):
-            msg = '`create_dir` ({0}) is not a valid input type!'
-            msg = msg.format(type(create_dir))
-            raise TypeError(msg)
         ##
         ## Downloading catalogues
         # `download_type` Array
@@ -631,12 +631,17 @@ class DownloadManager(CatlClassTemplate):
                                                     return_files_url=False)
                 ##
                 ## Downloading catalogues to corresponding catalogues
-                cweb.url_files_download(url_ii_perf,
+                cweb.url_files_download(url_ii,
                                         ext,
-                                        local_ii_perf,
+                                        local_ii,
                                         create_dir=True,
                                         check_exist=True,
                                         remove_files=self.remove_files)
+                # Printing out the output directory
+                if print_outdir:
+                    msg = '{0} Reading ``{1}`` and saving it to ``{2}``'
+                    msg = msg.format(file_msg, url_ii, local_ii)
+                    print(msg)
                 ##
                 ## Perfect option
                 if (self.perf_opt) and (download_opt_ii == 'mocks'):
@@ -661,6 +666,11 @@ class DownloadManager(CatlClassTemplate):
                                             create_dir=True,
                                             check_exist=True,
                                             remove_files=self.remove_files)
+                    # Printing out the output directory
+                    if print_outdir:
+                        msg = '{0} Reading ``{1}`` and saving it to ``{2}``'
+                        msg = msg.format(file_msg, url_ii, local_ii)
+                        print(msg)
 
 ## Main Class to handle catalogues
 class CatlUtils(CatlClassTemplate):
@@ -1389,7 +1399,7 @@ class CatlUtils(CatlClassTemplate):
         return return_obj
 
 ## SDSS Conformity Analysis - Calderon et al. (2018)
-class SDSSConformity(CatlUtils):
+class SDSSConformity(CatlUtils, DownloadManager):
     """
     Class used to handle the galaxy/group catalogues for the
     ``Calderon et al. (2018)`` analysis. This class has functions to read,
@@ -1403,10 +1413,168 @@ class SDSSConformity(CatlUtils):
     """
     def __init__(self):
         """
+        Examples
+        ----------
+        This class serves as the gateway for downloading and handling the
+        catalogues used in the `Calderon et al. (2018) <href="https://arxiv.org/abs/1712.02797">`_
+        analysis.
 
+        One can easily *initialize* `SDSSConformity`:
+
+        >>> from sdss_catl_utils.models.catl_models import SDSSConformity
+        >>> catl_obj = SDSSConformity()
+
+        One can also get the parameters used in the Conformity analysis:
+
+        >>> catl_obj.param_dict # doctest: +SKIP
+
+        The catalogues used for the analysis can be easily downloaded via the
+        `~sdss_catl_utils.models.catl_models.DownloadManager.catl_download`
+        method.
         """
+        # Initializing dictionary
+        self.init_params = self.initialize_params_dict()
+        # Initializing classes
+        CatlUtils.__init__(self, **self.init_params)
+        DownloadManager.__init__(self, **self.init_params)
+        # Metadata about the analysis
+        self.publications  = ['arXiv:1712.02797', 'https://doi.org/10.1093/mnras/sty2000']
+        self.github_url    = ['https://github.com/vcalderon2009/SDSS_Conformity_Analysis']
+        self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
+    
+    # Dictionary of input parameters
+    def initialize_params_dict(self):
+        r"""
+        Set the initial values of ``self.param_dict`` according to
+        the SDSS Conformity analysis values.
 
-## Prediction of group masses via ML - Calderon et al (2019)
+        Returns
+        ---------
+        param_dict : `dict`
+            Dictionary with the initial values of ``self.param_dict``
+            for the ``SDSS Conformity (2018)`` analysis.
+        """
+        param_dict = {}
+        param_dict['clf_method'] = 1
+        param_dict['clf_seed'  ] = 1235
+        param_dict['halotype'  ] = 'fof'
+        param_dict['hod_n'     ] = 0
+        param_dict['perf_opt'  ] = False
+        param_dict['sample'    ] = '19'
+        param_dict['dv'        ] = 1.0
+        param_dict['type_am'   ] = 'mr'
+
+        return param_dict
 
 ## Probing the stellar content of Galaxy Groups - Calderon et al. (2019)
+class SDSSCatlAnalysis(CatlUtils, DownloadManager):
+    """
+    Class used to handle the galaxy/group catalogues for the
+    ``Calderon et al. (2019)`` analysis. This class has functions to read,
+    modify, and analyze the galaxy/group catalogues for this analysis.
+
+    The scripts and the rest of the codes for ``SDSS Conformity`` analysis
+    can be found `here <https://github.com/vcalderon2009/SDSS_Conformity_Analysis>`_
+
+    For a list of available pre-processed galaxy- and group-galaxy
+    catalogues provided by ``sdss_catl_utils``, see ...
+    """
+    def __init__(self):
+        """
+        Examples
+        ----------
+        This class serves as the gateway for downloading and handling the
+        catalogues used in the `Calderon et al. (2018) <href="https://arxiv.org/abs/1712.02797">`_
+        analysis.
+        """
+        # Initializing dictionary
+        self.init_params = self.initialize_params_dict()
+        # Initializing classes
+        CatlUtils.__init__(self, **self.init_params)
+        DownloadManager.__init__(self, **self.init_params)
+        # Metadata about the analysis
+        # self.publications  = ['arXiv:1712.02797', 'https://doi.org/10.1093/mnras/sty2000']
+        self.github_url    = ['https://github.com/vcalderon2009/SDSS_Catl_Analysis']
+        # self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
+    
+    # Dictionary of input parameters
+    def initialize_params_dict(self):
+        r"""
+        Set the initial values of ``self.param_dict`` according to
+        the SDSS Conformity analysis values.
+
+        Returns
+        ---------
+        param_dict : `dict`
+            Dictionary with the initial values of ``self.param_dict``
+            for the ``SDSS Conformity (2018)`` analysis.
+        """
+        param_dict = {}
+        param_dict['clf_method'] = 1
+        param_dict['clf_seed'  ] = 1235
+        param_dict['halotype'  ] = 'fof'
+        param_dict['hod_n'     ] = 0
+        param_dict['perf_opt'  ] = False
+        param_dict['sample'    ] = '19'
+        param_dict['dv'        ] = 1.0
+        param_dict['type_am'   ] = 'mr'
+
+        return param_dict
+
+## Prediction of group masses via ML - Calderon et al (2019)
+class SDSSMLAnalysis(CatlUtils, DownloadManager):
+    """
+    Class used to handle the galaxy/group catalogues for the
+    ``Calderon et al. (2019)`` analysis. This class has functions to read,
+    modify, and analyze the galaxy/group catalogues for this analysis.
+
+    The scripts and the rest of the codes for ``SDSS Conformity`` analysis
+    can be found `here <https://github.com/vcalderon2009/SDSS_Conformity_Analysis>`_
+
+    For a list of available pre-processed galaxy- and group-galaxy
+    catalogues provided by ``sdss_catl_utils``, see ...
+    """
+    def __init__(self):
+        """
+        Examples
+        ----------
+        This class serves as the gateway for downloading and handling the
+        catalogues used in the `Calderon et al. (2018) <href="https://arxiv.org/abs/1712.02797">`_
+        analysis.
+        """
+        # Initializing dictionary
+        self.init_params = self.initialize_params_dict()
+        # Initializing classes
+        CatlUtils.__init__(self, **self.init_params)
+        DownloadManager.__init__(self, **self.init_params)
+        # Metadata about the analysis
+        # self.publications  = ['arXiv:1712.02797', 'https://doi.org/10.1093/mnras/sty2000']
+        self.github_url    = ['https://github.com/vcalderon2009/SDSS_Catl_Analysis']
+        # self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
+    
+    # Dictionary of input parameters
+    def initialize_params_dict(self):
+        r"""
+        Set the initial values of ``self.param_dict`` according to
+        the SDSS Conformity analysis values.
+
+        Returns
+        ---------
+        param_dict : `dict`
+            Dictionary with the initial values of ``self.param_dict``
+            for the ``SDSS Conformity (2018)`` analysis.
+        """
+        param_dict = {}
+        param_dict['clf_method'] = 1
+        param_dict['clf_seed'  ] = 1235
+        param_dict['halotype'  ] = 'fof'
+        param_dict['hod_n'     ] = 0
+        param_dict['perf_opt'  ] = False
+        param_dict['sample'    ] = '19'
+        param_dict['dv'        ] = 1.0
+        param_dict['type_am'   ] = 'mr'
+
+        return param_dict
+
+
 

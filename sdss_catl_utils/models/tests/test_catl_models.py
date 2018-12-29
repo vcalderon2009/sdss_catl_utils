@@ -415,3 +415,43 @@ def test_CatlUtils_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
     ## Running function
     with pytest.raises(ValueError):
         obj_ii = catl_models.CatlUtils(**input_dict)
+
+#### ------------- Test `SDSSConformity` function - Error - Type --------- ##
+def test_SDSSConformity_paramdict():
+    """
+    Checks the function `~sdss_catl_utils.models.catl_models.SDSSConformity`
+    for initialization, and that it returns a `dict` when retrieving the
+    set of input parameters
+    """
+    catl_obj = catl_models.SDSSConformity()
+    assert(isinstance(catl_obj.param_dict, dict))
+    assert(isinstance(catl_obj.publications, list))
+    assert(isinstance(catl_obj.github_url, list))
+    assert(isinstance(catl_obj.analysis_docs, list))
+
+
+#### ------------- Test `SDSSCatlAnalysis` function - Error - Values --------- ##
+def test_SDSSCatlAnalysis_paramdict():
+    """
+    Checks the function `~sdss_catl_utils.models.catl_models.SDSSCatlAnalysis`
+    for initialization, and that it returns a `dict` when retrieving the
+    set of input parameters
+    """
+    catl_obj = catl_models.SDSSCatlAnalysis()
+    assert(isinstance(catl_obj.param_dict, dict))
+    # assert(isinstance(catl_obj.publications, list))
+    assert(isinstance(catl_obj.github_url, list))
+    # assert(isinstance(catl_obj.analysis_docs, list))
+
+#### ------------- Test `SDSSMLAnalysis` function - Error - Values --------- ##
+def test_SDSSMLAnalysis_paramdict():
+    """
+    Checks the function `~sdss_catl_utils.models.catl_models.SDSSMLAnalysis`
+    for initialization, and that it returns a `dict` when retrieving the
+    set of input parameters
+    """
+    catl_obj = catl_models.SDSSMLAnalysis()
+    assert(isinstance(catl_obj.param_dict, dict))
+    # assert(isinstance(catl_obj.publications, list))
+    assert(isinstance(catl_obj.github_url, list))
+    # assert(isinstance(catl_obj.analysis_docs, list))

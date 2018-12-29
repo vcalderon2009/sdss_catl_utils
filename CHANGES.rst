@@ -13,6 +13,11 @@
 - Added more functions for `~sdss_catl_utils.mocks_manager.catl_utils` module
   (`~sdss_catl_utils.mocks_manager.catl_utils.catl_prefix_main`,
   `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`)
+- Added classes for the
+  Conformity (`~sdss_catl_utils.models.catl_models.SDSSConformity`), 
+  ML (`~sdss_catl_utils.models.catl_models.SDSSMLAnalysis`), and
+  Catl (`~sdss_catl_utils.models.catl_models.SDSSCatlAnalysis`) analyses.
+
 
 0.0.1 (2018-12-11)
 -----------------------
