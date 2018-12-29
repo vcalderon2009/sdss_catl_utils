@@ -1430,10 +1430,26 @@ class SDSSConformity(CatlUtils, DownloadManager):
 
         The catalogues used for the analysis can be easily downloaded via the
         `~sdss_catl_utils.models.catl_models.DownloadManager.catl_download`
-        method.
+        method. If one wants to download the ``data`` catalogues, i.e.
+        both ``memb`` and ``group`` catalogues, one can do it by:
+
+        >>> catl_obj.catl_download(download_type='data') # doctest: +SKIP
+
+        And if one wants to print out the paths of the URLs and output
+        directories, one can do that by setting ``print_outdir = True``:
+
+        >>> catl_obj.catl_download(download_type='data', print_outdir = True) # doctest: +SKIP
+
+        Additionally, one could also `extract` the paths to the catalogues.
+        For example, to recover the path to the ``data`` ``group`` catalogue,
+        you could do that by:
+
+        >>> catl_obj.catl_arr_extract(catl_kind='data', catl_type='group') # doctest: +SKIP
+
+        This would return an array with the path(s) of the catalogues in question.
         """
         # Initializing dictionary
-        self.init_params = self.initialize_params_dict()
+        self.init_params = self._initialize_params_dict()
         # Initializing classes
         CatlUtils.__init__(self, **self.init_params)
         DownloadManager.__init__(self, **self.init_params)
@@ -1443,7 +1459,7 @@ class SDSSConformity(CatlUtils, DownloadManager):
         self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
     
     # Dictionary of input parameters
-    def initialize_params_dict(self):
+    def _initialize_params_dict(self):
         r"""
         Set the initial values of ``self.param_dict`` according to
         the SDSS Conformity analysis values.
@@ -1486,9 +1502,38 @@ class SDSSCatlAnalysis(CatlUtils, DownloadManager):
         This class serves as the gateway for downloading and handling the
         catalogues used in the `Calderon et al. (2018) <href="https://arxiv.org/abs/1712.02797">`_
         analysis.
+
+        One can easily *initialize* `SDSSCatlAnalysis`:
+
+        >>> from sdss_catl_utils.models.catl_models import SDSSCatlAnalysis
+        >>> catl_obj = SDSSCatlAnalysis()
+
+        One can also get the parameters used in the Conformity analysis:
+
+        >>> catl_obj.param_dict # doctest: +SKIP
+
+        The catalogues used for the analysis can be easily downloaded via the
+        `~sdss_catl_utils.models.catl_models.DownloadManager.catl_download`
+        method. If one wants to download the ``data`` catalogues, i.e.
+        both ``memb`` and ``group`` catalogues, one can do it by:
+
+        >>> catl_obj.catl_download(download_type='data') # doctest: +SKIP
+
+        And if one wants to print out the paths of the URLs and output
+        directories, one can do that by setting ``print_outdir = True``:
+
+        >>> catl_obj.catl_download(download_type='data', print_outdir = True) # doctest: +SKIP
+
+        Additionally, one could also `extract` the paths to the catalogues.
+        For example, to recover the path to the ``data`` ``group`` catalogue,
+        you could do that by:
+
+        >>> catl_obj.catl_arr_extract(catl_kind='data', catl_type='group') # doctest: +SKIP
+
+        This would return an array with the path(s) of the catalogues in question.
         """
         # Initializing dictionary
-        self.init_params = self.initialize_params_dict()
+        self.init_params = self._initialize_params_dict()
         # Initializing classes
         CatlUtils.__init__(self, **self.init_params)
         DownloadManager.__init__(self, **self.init_params)
@@ -1498,7 +1543,7 @@ class SDSSCatlAnalysis(CatlUtils, DownloadManager):
         # self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
     
     # Dictionary of input parameters
-    def initialize_params_dict(self):
+    def _initialize_params_dict(self):
         r"""
         Set the initial values of ``self.param_dict`` according to
         the SDSS Conformity analysis values.
@@ -1541,9 +1586,38 @@ class SDSSMLAnalysis(CatlUtils, DownloadManager):
         This class serves as the gateway for downloading and handling the
         catalogues used in the `Calderon et al. (2018) <href="https://arxiv.org/abs/1712.02797">`_
         analysis.
+
+        One can easily *initialize* `SDSSMLAnalysis`:
+
+        >>> from sdss_catl_utils.models.catl_models import SDSSMLAnalysis
+        >>> catl_obj = SDSSMLAnalysis()
+
+        One can also get the parameters used in the Conformity analysis:
+
+        >>> catl_obj.param_dict # doctest: +SKIP
+
+        The catalogues used for the analysis can be easily downloaded via the
+        `~sdss_catl_utils.models.catl_models.DownloadManager.catl_download`
+        method. If one wants to download the ``data`` catalogues, i.e.
+        both ``memb`` and ``group`` catalogues, one can do it by:
+
+        >>> catl_obj.catl_download(download_type='data') # doctest: +SKIP
+
+        And if one wants to print out the paths of the URLs and output
+        directories, one can do that by setting ``print_outdir = True``:
+
+        >>> catl_obj.catl_download(download_type='data', print_outdir = True) # doctest: +SKIP
+
+        Additionally, one could also `extract` the paths to the catalogues.
+        For example, to recover the path to the ``data`` ``group`` catalogue,
+        you could do that by:
+
+        >>> catl_obj.catl_arr_extract(catl_kind='data', catl_type='group') # doctest: +SKIP
+
+        This would return an array with the path(s) of the catalogues in question.
         """
         # Initializing dictionary
-        self.init_params = self.initialize_params_dict()
+        self.init_params = self._initialize_params_dict()
         # Initializing classes
         CatlUtils.__init__(self, **self.init_params)
         DownloadManager.__init__(self, **self.init_params)
@@ -1553,7 +1627,7 @@ class SDSSMLAnalysis(CatlUtils, DownloadManager):
         # self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
     
     # Dictionary of input parameters
-    def initialize_params_dict(self):
+    def _initialize_params_dict(self):
         r"""
         Set the initial values of ``self.param_dict`` according to
         the SDSS Conformity analysis values.
