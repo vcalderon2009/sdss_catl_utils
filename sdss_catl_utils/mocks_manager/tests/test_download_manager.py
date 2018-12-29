@@ -421,6 +421,16 @@ prefix_arr = [\
     ('data', 0, 'fof', 1, 12, 1.0, '19', 'mr', False, 'memb', 'data/mr/Mr19/member_galaxy_catalogues'),
     ('data', 0, 'fof', 1, 12, 1.0, '20', 'mr', False, 'memb', 'data/mr/Mr20/member_galaxy_catalogues'),
     ('data', 0, 'fof', 1, 12, 1.0, '21', 'mr', False, 'memb', 'data/mr/Mr21/member_galaxy_catalogues'),
+    ('mocks', 0, 'fof', 1, 12, 1.0, '19', 'mr', False, 'memb', 'mocks/halos_fof/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/mr/Mr19/member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 12, 1.0, '19', 'mr', False, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/mr/Mr19/member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 12, 1.0, '19', 'mr', True, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/mr/Mr19/perfect_member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 400, 1.0, '19', 'mr', True, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_400/clf_method_1/mr/Mr19/perfect_member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 400, 1.0, '19', 'mr', False, 'group', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_400/clf_method_1/mr/Mr19/group_galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', False, 'group', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/group_galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', False, 'gal', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', True, 'gal', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', True, 'group', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/perfect_group_galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 1.25, '20', 'mstar', True, 'memb', 'mocks/halos_so/dv_1.25/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr20/perfect_member_galaxy_catalogues')
     ]
 prefix_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, '
 prefix_str += 'dv, sample, type_am, perf_opt, catl_type, expected' 

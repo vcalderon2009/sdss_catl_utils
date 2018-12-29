@@ -12,3 +12,4 @@ from __future__ import (absolute_import, division, print_function,
 import os
 
 from sdss_catl_utils.models import catl_models
+from sdss_catl_utils.models import catl_models_template
