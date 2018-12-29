@@ -136,7 +136,7 @@ class DownloadManager(CatlClassTemplate):
         Examples
         ----------
 
-        >>> from sdss_catl_utils.mocks_manager.download_manager import DownloadManager
+        >>> from sdss_catl_utils.models.catl_models import DownloadManager
         """
         # Super class from template
         super(DownloadManager, self).__init__(**kwargs)
@@ -560,7 +560,7 @@ class DownloadManager(CatlClassTemplate):
         ----------
 
         >>> # To download the synthetic catalogues
-        >>> from sdss_catl_utils.mocks_manager import DownloadManager
+        >>> from sdss_catl_utils.models.catl_models import DownloadManager
         >>>
         >>> # Downloading catalogues
         >>> A = DownloadManager()
