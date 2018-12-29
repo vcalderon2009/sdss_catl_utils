@@ -16,7 +16,7 @@ Set of test functions for the `download_manager` functions
 
 import numpy as np
 import pytest
-from sdss_catl_utils.mocks_manager.download_manager import DownloadManager
+from sdss_catl_utils.models.catl_models import DownloadManager
 from sdss_catl_utils.custom_exceptions import SDSSCatlUtils_Error
 
 ## Functions
