@@ -2,9 +2,9 @@
 -----------------------
 
 - Added new functions to download catalogues to
-  `~sdss_catl_utils.mocks_manager.DownloadManager`. It allows for
+  `~sdss_catl_utils.models.catl_models.DownloadManager`. It allows for
   the download of catalogues of specific characteristics.
-- Added new function `~sdss_catl_utils.mocks_manager.catl_utils.CatlUtils`
+- Added new function `~sdss_catl_utils.models.catl_models.CatlUtils`
   that acts as a tool for handling the synthetic catalogues.
 - Added functions `~sdss_catl_utils.mocks_manager.catl_utils.catl_keys` and
   `~sdss_catl_utils.mocks_manager.catl_utils.catl_keys_prop` to facilitate
