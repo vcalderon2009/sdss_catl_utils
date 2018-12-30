@@ -16,4 +16,4 @@ and so once they are downloaded they will be directly added to your
 cache and can immediately be used for your science applications.
 
 The class responsible for downloading and caching these catalogues
-is `~sdss_catl_utils.mocks_manager.download_manager.DownloadManager`.
+is `~sdss_catl_utils.models.catl_models.DownloadManager`.
