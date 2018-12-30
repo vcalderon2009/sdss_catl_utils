@@ -1,0 +1,48 @@
+:orphan:
+
+.. _whats_new_v0p0p2:
+
+***********************************
+What's new in SDSS_Catl_Utils 0.0.2
+***********************************
+
+``SDSS_Catl_Utils`` ``v0.0.2`` is now available for installation with ``pip``.
+New features are summarized below. See :ref:`changelog` for details on
+smaller issues and bug-fixes. See :ref:`whats_new_v0x_history` for full
+release history information.
+
+=====================
+New Utility Functions
+=====================
+
+------
+Models
+------
+
+A new module `~sdss_catl_utils.models` contains the set of `models`
+pertaining to previous/current analysis performed that have used
+the set of galaxy and group catalogues presented here.
+
+There set of new functions include:
+
+* `~sdss_catl_utils.models.catl_models.DownloadManager`
+* `~sdss_catl_utils.models.catl_models.CatlUtils`
+* `~sdss_catl_utils.models.catl_models.SDSSConformity`
+* `~sdss_catl_utils.models.catl_models.SDSSCatlAnalysis`
+* `~sdss_catl_utils.models.catl_models.SDSSMLAnalysis`
+
+These functions allow for the **downloading** and **handling** of the galaxy
+and group catalogues.
+
+---------------
+Catalogue Utils
+---------------
+
+- New functionality was added to the `~sdss_catl_utils.mocks_manager.catl_utils`
+  that allows for an recovery and extraction of the data in the galaxy/group
+  catalogues.
+
+
+
+
+

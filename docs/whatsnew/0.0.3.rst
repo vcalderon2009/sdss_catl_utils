@@ -1,0 +1,13 @@
+:orphan:
+
+.. _whats_new_v0p0p3:
+
+*************************************************
+What's new in (unreleased) SDSS_Catl_Utils 0.0.3
+*************************************************
+
+``SDSS_Catl_Utils`` ``v0.0.3`` is currently under development. The latest
+release is ``v0.0.2``, which can now be installed with pip. New features
+currently be developed for future release ``v0.0.3`` are summarized below.
+See :ref:`whats_new_v0x_history` for full release history information.
+
