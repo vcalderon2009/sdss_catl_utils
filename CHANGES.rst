@@ -1,4 +1,4 @@
-0.0.2 (unreleased)
+0.0.2 (2018-12-29)
 -----------------------
 
 - Added new functions to download catalogues to
