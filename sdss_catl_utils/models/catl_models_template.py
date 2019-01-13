@@ -41,7 +41,7 @@ class CatlClassTemplate(object):
     r"""
     Abstract base class of any of models for the various analyses.
     The functionality of this class is mostly trivial.
-    The sole purpose of the base class is to standarize the
+    The sole purpose of the base class is to standardize the
     attributes and methods required of any of the analyses of each
     of the different papers.
     """
@@ -95,6 +95,11 @@ class CatlClassTemplate(object):
             where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
             matter velocity.
 
+        sigma_clf_c : `float`, optional
+            Value of the scatter in log(L) for central galaxies, when being
+            assigned during the `conditional luminosity function` (CLF).
+            This variable is set to ``0.1417`` by default.
+
         sample : {'19', '20', '21'}, `str`, optional
             Luminosity of the SDSS volume-limited sample to analyze.
             This variable is set to ``'19'`` by default.
@@ -139,6 +144,7 @@ class CatlClassTemplate(object):
         self.clf_method   = kwargs.get('clf_method', md.clf_method)
         self.clf_seed     = kwargs.get('clf_seed', md.clf_seed)
         self.dv           = kwargs.get('dv', md.dv)
+        self.sigma_clf_c  = kwargs.get('sigma_clf_c', md.sigma_clf_c)
         self.sample       = kwargs.get('sample', md.sample)
         self.type_am      = kwargs.get('type_am', md.type_am)
         self.cosmo_choice = kwargs.get('cosmo_choice', md.cosmo_choice)
@@ -175,6 +181,8 @@ class CatlClassTemplate(object):
         check_input_params(self.clf_seed, 'clf_seed', check_type='type')
         # `dv`
         check_input_params(self.dv, 'dv', check_type='type')
+        # `sigma_clf_c`
+        check_input_params(self.sigma_clf_c, 'sigma_clf_c', check_type='type')
         # `sample`
         check_input_params(self.sample, 'sample', check_type='type')
         check_input_params(self.sample, 'sample', check_type='vals')
@@ -231,6 +239,7 @@ class CatlClassTemplate(object):
          'clf_method': 1,
          'clf_seed': 3,
          'dv': 1.0,
+         'sigma_clf_c': 0.1417,
          'sample': '19',
          'type_am': 'mr',
          'cosmo_choice': 'LasDamas',
@@ -252,6 +261,7 @@ class CatlClassTemplate(object):
         param_dict['clf_method'  ] = self.clf_method
         param_dict['clf_seed'    ] = self.clf_seed
         param_dict['dv'          ] = self.dv
+        param_dict['sigma_clf_c' ] = self.sigma_clf_c
         param_dict['sample'      ] = self.sample
         param_dict['type_am'     ] = self.type_am
         param_dict['cosmo_choice'] = self.cosmo_choice

@@ -24,6 +24,7 @@ catl_kind    = 'mocks'
 hod_n        = 0
 halotype     = 'fof'
 clf_method   = 1
+sigma_clf_c  = 0.1417
 clf_seed     = 1235
 dv           = 1.
 sample       = '19'

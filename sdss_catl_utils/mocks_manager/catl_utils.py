@@ -537,7 +537,8 @@ def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
 # Catalogue prefix of the catalogues
 def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
     halotype=md.halotype, clf_method=md.clf_method, clf_seed=md.clf_seed,
-    dv=md.dv, sample=md.sample, type_am=md.type_am, perf_opt=md.perf_opt):
+    dv=md.dv, sigma_clf_c=md.sigma_clf_c, sample=md.sample, type_am=md.type_am,
+    perf_opt=md.perf_opt):
     """
     Prefix of the paths based on the type of catalogues and input parameters
     chosen.
@@ -590,6 +591,11 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
         where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
         matter velocity.
 
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
     sample : {'19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
@@ -640,6 +646,8 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
     check_input_params(clf_seed, 'clf_seed', check_type='type')
     # `dv`
     check_input_params(dv, 'dv', check_type='type')
+    # `sigma_clf_c`
+    check_input_params(sigma_clf_c, 'sigma_clf_c', check_type='type')
     # `sample`
     check_input_params(sample, 'sample', check_type='type')
     check_input_params(sample, 'sample', check_type='vals')
@@ -695,6 +703,7 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
                                 'hod_model_{0}'.format(hod_n),
                                 'clf_seed_{0}'.format(clf_seed),
                                 'clf_method_{0}'.format(clf_method),
+                                'sigma_c_{0}'.format(sigma_clf_c),
                                 type_am,
                                 sample_Mr,
                                 catl_type_dict[catl_type_str])
@@ -718,6 +727,7 @@ def _get_input_params_dict():
                         'hod_n'        : (int),
                         'halotype'     : (str),
                         'clf_method'   : (int),
+                        'sigma_clf_c'  : (float),
                         'clf_seed'     : (int),
                         'dv'           : (int, float),
                         'sample'       : (str),

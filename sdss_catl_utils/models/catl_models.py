@@ -100,6 +100,11 @@ class DownloadManager(CatlClassTemplate):
             where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
             matter velocity.
 
+        sigma_clf_c : `float`, optional
+            Value of the scatter in log(L) for central galaxies, when being
+            assigned during the `conditional luminosity function` (CLF).
+            This variable is set to ``0.1417`` by default.
+
         sample : {'19', '20', '21'}, `str`, optional
             Luminosity of the SDSS volume-limited sample to analyze.
             This variable is set to ``'19'`` by default.
@@ -425,6 +430,7 @@ class DownloadManager(CatlClassTemplate):
                                                     clf_method=self.clf_method,
                                                     clf_seed=self.clf_seed,
                                                     dv=self.dv,
+                                                    sigma_clf_c=self.sigma_clf_c,
                                                     sample=self.sample,
                                                     type_am=self.type_am)
 
@@ -732,6 +738,11 @@ class CatlUtils(CatlClassTemplate):
             where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
             matter velocity.
 
+        sigma_clf_c : `float`, optional
+            Value of the scatter in log(L) for central galaxies, when being
+            assigned during the `conditional luminosity function` (CLF).
+            This variable is set to ``0.1417`` by default.
+
         sample : {'19', '20', '21'}, `str`, optional
             Luminosity of the SDSS volume-limited sample to analyze.
             This variable is set to ``'19'`` by default.
@@ -889,6 +900,7 @@ class CatlUtils(CatlClassTemplate):
          'clf_method': 1,
          'clf_seed': 3,
          'dv': 1.0,
+         'sigma_clf_c': 0.1417,
          'sample': '19',
          'type_am': 'mr',
          'cosmo_choice': 'LasDamas',
@@ -910,6 +922,7 @@ class CatlUtils(CatlClassTemplate):
         param_dict['clf_method'  ] = self.clf_method
         param_dict['clf_seed'    ] = self.clf_seed
         param_dict['dv'          ] = self.dv
+        param_dict['sigma_clf_c' ] = self.sigma_clf_c
         param_dict['sample'      ] = self.sample
         param_dict['type_am'     ] = self.type_am
         param_dict['cosmo_choice'] = self.cosmo_choice
@@ -978,6 +991,7 @@ class CatlUtils(CatlClassTemplate):
                                                     clf_method=self.clf_method,
                                                     clf_seed=self.clf_seed,
                                                     dv=self.dv,
+                                                    sigma_clf_c=self.sigma_clf_c,
                                                     sample=self.sample,
                                                     type_am=self.type_am)
 
@@ -1471,14 +1485,15 @@ class SDSSConformity(CatlUtils, DownloadManager):
             for the ``SDSS Conformity (2018)`` analysis.
         """
         param_dict = {}
-        param_dict['clf_method'] = 1
-        param_dict['clf_seed'  ] = 1235
-        param_dict['halotype'  ] = 'fof'
-        param_dict['hod_n'     ] = 0
-        param_dict['perf_opt'  ] = False
-        param_dict['sample'    ] = '19'
-        param_dict['dv'        ] = 1.0
-        param_dict['type_am'   ] = 'mr'
+        param_dict['clf_method' ] = 1
+        param_dict['clf_seed'   ] = 1235
+        param_dict['halotype'   ] = 'fof'
+        param_dict['hod_n'      ] = 0
+        param_dict['perf_opt'   ] = False
+        param_dict['sample'     ] = '19'
+        param_dict['dv'         ] = 1.0
+        param_dict['type_am'    ] = 'mr'
+        param_dict['sigma_clf_c'] = 0.1417
 
         return param_dict
 
@@ -1555,14 +1570,15 @@ class SDSSCatlAnalysis(CatlUtils, DownloadManager):
             for the ``SDSS Conformity (2018)`` analysis.
         """
         param_dict = {}
-        param_dict['clf_method'] = 1
-        param_dict['clf_seed'  ] = 1235
-        param_dict['halotype'  ] = 'fof'
-        param_dict['hod_n'     ] = 0
-        param_dict['perf_opt'  ] = False
-        param_dict['sample'    ] = '19'
-        param_dict['dv'        ] = 1.0
-        param_dict['type_am'   ] = 'mr'
+        param_dict['clf_method' ] = 1
+        param_dict['clf_seed'   ] = 1235
+        param_dict['halotype'   ] = 'fof'
+        param_dict['hod_n'      ] = 0
+        param_dict['perf_opt'   ] = False
+        param_dict['sample'     ] = '19'
+        param_dict['dv'         ] = 1.0
+        param_dict['type_am'    ] = 'mr'
+        param_dict['sigma_clf_c'] = 0.1417
 
         return param_dict
 
@@ -1639,16 +1655,14 @@ class SDSSMLAnalysis(CatlUtils, DownloadManager):
             for the ``SDSS Conformity (2018)`` analysis.
         """
         param_dict = {}
-        param_dict['clf_method'] = 1
-        param_dict['clf_seed'  ] = 1235
-        param_dict['halotype'  ] = 'fof'
-        param_dict['hod_n'     ] = 0
-        param_dict['perf_opt'  ] = False
-        param_dict['sample'    ] = '19'
-        param_dict['dv'        ] = 1.0
-        param_dict['type_am'   ] = 'mr'
+        param_dict['clf_method' ] = 1
+        param_dict['clf_seed'   ] = 1235
+        param_dict['halotype'   ] = 'fof'
+        param_dict['hod_n'      ] = 0
+        param_dict['perf_opt'   ] = False
+        param_dict['sample'     ] = '19'
+        param_dict['dv'         ] = 1.0
+        param_dict['type_am'    ] = 'mr'
+        param_dict['sigma_clf_c'] = 0.1417
 
         return param_dict
-
-
-
