@@ -38,6 +38,7 @@ cosmo_choice_arr = ['Planck', 'LasDamas']
 perf_opt_arr     = [True, False]
 remove_files_arr = [True, False]
 environ_name_arr = ['Env1']
+sigma_clf_c_arr  = [0.1, 0.2, 0.3]
 
 @pytest.mark.parametrize('catl_kind', catl_kind_arr)
 @pytest.mark.parametrize('hod_n', hod_n_arr)
@@ -45,6 +46,7 @@ environ_name_arr = ['Env1']
 @pytest.mark.parametrize('clf_method', clf_method_arr)
 @pytest.mark.parametrize('clf_seed', clf_seed_arr)
 @pytest.mark.parametrize('dv', dv_arr)
+@pytest.mark.parametrize('sigma_clf_c', sigma_clf_c_arr)
 @pytest.mark.parametrize('sample', sample_arr)
 @pytest.mark.parametrize('type_am', type_am_arr)
 @pytest.mark.parametrize('cosmo_choice', cosmo_choice_arr)
@@ -53,7 +55,7 @@ environ_name_arr = ['Env1']
 @pytest.mark.parametrize('environ_name', environ_name_arr)
 def test_DownloadManager_inputs_types(catl_kind, hod_n, halotype, clf_method,
     clf_seed, dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
-    environ_name):
+    environ_name, sigma_clf_c):
     """
     Checks the function `~sdss_catl_utils.mocks_manager.download_manager.DownloadManager`
     for input parameters.
@@ -106,6 +108,11 @@ def test_DownloadManager_inputs_types(catl_kind, hod_n, halotype, clf_method,
         where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
         matter velocity.
 
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
     sample : {'19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
@@ -150,6 +157,7 @@ def test_DownloadManager_inputs_types(catl_kind, hod_n, halotype, clf_method,
                     'clf_method': clf_method,
                     'clf_seed': clf_seed,
                     'dv': dv,
+                    'sigma_clf_c': sigma_clf_c,
                     'sample': sample,
                     'type_am': type_am,
                     'cosmo_choice': cosmo_choice,
@@ -162,24 +170,26 @@ def test_DownloadManager_inputs_types(catl_kind, hod_n, halotype, clf_method,
 #### ------------- Test `DownloadManager` function - Error - Types --------------- ##
 
 input_arr_type = [\
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 1),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, 'str', 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', 'str', True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 123, True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 1000, 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, 1, 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 'test', '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 1, '1', 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', '1', 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 10, 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', '2', 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        (32, 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a')]
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 1, 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, 'str', 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', 'str', True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 123, True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 1000, 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, 1, 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 'test', '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, '1', 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', '1', 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 10, 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', '2', 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        (32, 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 'sig')]
 input_str_type  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, dv, sample, '
-input_str_type += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name'
+input_str_type += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name '
+input_str_type += 'sigma_clf_c'
 @pytest.mark.parametrize(input_str_type, input_arr_type)
 def test_DownloadManager_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
     clf_seed, dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
-    environ_name):
+    environ_name, sigma_clf_c):
     """
     Checks the function `~sdss_catl_utils.mocks_manager.download_manager.DownloadManager`
     for input parameters.
@@ -232,6 +242,11 @@ def test_DownloadManager_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
         where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
         matter velocity.
 
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
     sample : {'19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
@@ -276,6 +291,7 @@ def test_DownloadManager_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
                     'clf_method': clf_method,
                     'clf_seed': clf_seed,
                     'dv': dv,
+                    'sigma_clf_c': sigma_clf_c,
                     'sample': sample,
                     'type_am': type_am,
                     'cosmo_choice': cosmo_choice,
@@ -289,27 +305,28 @@ def test_DownloadManager_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
 #### ------------- Test `DownloadManager` function - Error - Values --------------- ##
 
 input_arr_vals = [\
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'LasDamas1', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck1', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr2', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '19', 'mstar2', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, '191', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 1, 1, 0.6, 'a', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 0, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 5, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so', 4, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'so1', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 1, 'fof2', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 12, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data', 98, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('data_1', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a'),
-        ('mocks2', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a')]
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'LasDamas1', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck1', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mr2', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '19', 'mstar2', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, '191', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 1, 1, 0.6, 'a', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 0, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 5, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so', 4, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'so1', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 1, 'fof2', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 12, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data', 98, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('data_1', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
+        ('mocks2', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1)]
 input_str_vals  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, dv, sample, '
-input_str_vals += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name'
+input_str_vals += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name '
+input_str_vals += 'sigma_clf_c'
 @pytest.mark.parametrize(input_str_vals, input_arr_vals)
 def test_DownloadManager_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
     clf_seed, dv, sample, type_am, cosmo_choice, perf_opt, remove_files,
-    environ_name):
+    environ_name, sigma_clf_c):
     """
     Checks the function `~sdss_catl_utils.mocks_manager.download_manager.DownloadManager`
     for input parameters.
@@ -362,6 +379,11 @@ def test_DownloadManager_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
         where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
         matter velocity.
 
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
     sample : {'19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
@@ -406,6 +428,7 @@ def test_DownloadManager_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
                     'clf_method': clf_method,
                     'clf_seed': clf_seed,
                     'dv': dv,
+                    'sigma_clf_c': sigma_clf_c,
                     'sample': sample,
                     'type_am': type_am,
                     'cosmo_choice': cosmo_choice,
@@ -418,25 +441,25 @@ def test_DownloadManager_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
 
 #### ------------ Test `DownloadManager` function - _catl_prefix ----------- ##
 prefix_arr = [\
-    ('data', 0, 'fof', 1, 12, 1.0, '19', 'mr', False, 'memb', 'data/mr/Mr19/member_galaxy_catalogues'),
-    ('data', 0, 'fof', 1, 12, 1.0, '20', 'mr', False, 'memb', 'data/mr/Mr20/member_galaxy_catalogues'),
-    ('data', 0, 'fof', 1, 12, 1.0, '21', 'mr', False, 'memb', 'data/mr/Mr21/member_galaxy_catalogues'),
-    ('mocks', 0, 'fof', 1, 12, 1.0, '19', 'mr', False, 'memb', 'mocks/halos_fof/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/mr/Mr19/member_galaxy_catalogues'),
-    ('mocks', 0, 'so', 1, 12, 1.0, '19', 'mr', False, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/mr/Mr19/member_galaxy_catalogues'),
-    ('mocks', 0, 'so', 1, 12, 1.0, '19', 'mr', True, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/mr/Mr19/perfect_member_galaxy_catalogues'),
-    ('mocks', 0, 'so', 1, 400, 1.0, '19', 'mr', True, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_400/clf_method_1/mr/Mr19/perfect_member_galaxy_catalogues'),
-    ('mocks', 0, 'so', 1, 400, 1.0, '19', 'mr', False, 'group', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_400/clf_method_1/mr/Mr19/group_galaxy_catalogues'),
-    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', False, 'group', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/group_galaxy_catalogues'),
-    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', False, 'gal', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/galaxy_catalogues'),
-    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', True, 'gal', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/galaxy_catalogues'),
-    ('mocks', 1, 'so', 1, 400, 1.05, '21', 'mstar', True, 'group', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr21/perfect_group_galaxy_catalogues'),
-    ('mocks', 1, 'so', 1, 400, 1.25, '20', 'mstar', True, 'memb', 'mocks/halos_so/dv_1.25/hod_model_1/clf_seed_400/clf_method_1/mstar/Mr20/perfect_member_galaxy_catalogues')
+    ('data', 0, 'fof', 1, 12, 0.1417, 1.0, '19', 'mr', False, 'memb', 'data/mr/Mr19/member_galaxy_catalogues'),
+    ('data', 0, 'fof', 1, 12, 0.1, 1.0, '20', 'mr', False, 'memb', 'data/mr/Mr20/member_galaxy_catalogues'),
+    ('data', 0, 'fof', 1, 12, 0.1, 1.0, '21', 'mr', False, 'memb', 'data/mr/Mr21/member_galaxy_catalogues'),
+    ('mocks', 0, 'fof', 1, 12, 0.25, 1.0, '19', 'mr', False, 'memb', 'mocks/halos_fof/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/sigma_c_0.25/mr/Mr19/member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 12, 0.1, 1.0, '19', 'mr', False, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/sigma_c_0.1/mr/Mr19/member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 12, 0.1, 1.0, '19', 'mr', True, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_12/clf_method_1/sigma_c_0.1/mr/Mr19/perfect_member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 400, 0.1, 1.0, '19', 'mr', True, 'memb', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_400/clf_method_1/sigma_c_0.1/mr/Mr19/perfect_member_galaxy_catalogues'),
+    ('mocks', 0, 'so', 1, 400, 0.1, 1.0, '19', 'mr', False, 'group', 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_400/clf_method_1/sigma_c_0.1/mr/Mr19/group_galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 0.1, 1.05, '21', 'mstar', False, 'group', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/sigma_c_0.1/mstar/Mr21/group_galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 0.1, 1.05, '21', 'mstar', False, 'gal', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/sigma_c_0.1/mstar/Mr21/galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 0.1, 1.05, '21', 'mstar', True, 'gal', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/sigma_c_0.1/mstar/Mr21/galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 0.1, 1.05, '21', 'mstar', True, 'group', 'mocks/halos_so/dv_1.05/hod_model_1/clf_seed_400/clf_method_1/sigma_c_0.1/mstar/Mr21/perfect_group_galaxy_catalogues'),
+    ('mocks', 1, 'so', 1, 400, 0.1, 1.25, '20', 'mstar', True, 'memb', 'mocks/halos_so/dv_1.25/hod_model_1/clf_seed_400/clf_method_1/sigma_c_0.1/mstar/Mr20/perfect_member_galaxy_catalogues')
     ]
-prefix_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, '
+prefix_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, sigma_clf_c,'
 prefix_str += 'dv, sample, type_am, perf_opt, catl_type, expected' 
 @pytest.mark.parametrize(prefix_str, prefix_arr)
 def test_DownloadManager_catl_prefix(catl_kind, hod_n, halotype, clf_method,
-    clf_seed, dv, sample, type_am, perf_opt, catl_type, expected):
+    clf_seed, sigma_clf_c, dv, sample, type_am, perf_opt, catl_type, expected):
     """
     Checks the function `~sdss_catl_utils.mocks_manager.download_manager.DownloadManager`
     for catalogue prefix strings.
@@ -489,6 +512,11 @@ def test_DownloadManager_catl_prefix(catl_kind, hod_n, halotype, clf_method,
         where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
         matter velocity.
 
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
     sample : {'19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
@@ -519,6 +547,7 @@ def test_DownloadManager_catl_prefix(catl_kind, hod_n, halotype, clf_method,
                     'clf_method': clf_method,
                     'clf_seed': clf_seed,
                     'dv': dv,
+                    'sigma_clf_c': sigma_clf_c,
                     'sample': sample,
                     'type_am': type_am,
                     'perf_opt': perf_opt}
