@@ -184,7 +184,7 @@ input_arr_type = [\
         (32, 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
         ('data', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 'sig')]
 input_str_type  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, dv, sample, '
-input_str_type += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name '
+input_str_type += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name, '
 input_str_type += 'sigma_clf_c'
 @pytest.mark.parametrize(input_str_type, input_arr_type)
 def test_DownloadManager_inputs_err_type(catl_kind, hod_n, halotype, clf_method,
@@ -321,7 +321,7 @@ input_arr_vals = [\
         ('data_1', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1),
         ('mocks2', 1, 'so', 1, 1, 0.6, '19', 'mr', 'Planck', True, True, 'a', 0.1)]
 input_str_vals  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, dv, sample, '
-input_str_vals += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name '
+input_str_vals += 'type_am, cosmo_choice, perf_opt, remove_files, environ_name, '
 input_str_vals += 'sigma_clf_c'
 @pytest.mark.parametrize(input_str_vals, input_arr_vals)
 def test_DownloadManager_inputs_err_vals(catl_kind, hod_n, halotype, clf_method,
