@@ -1,7 +1,13 @@
-0.0.3 (unreleased)
+0.0.3 (2019-01-21)
 -----------------------
 
-- No changes yet.
+- Added new parameter ``sigma_clf_c``, which corresponds to the scatter in
+  ``log(L)`` for central galaxies in the `conditional luminosity function`
+  (CLF). The affected functions were:
+  - `~sdss_catl_utils.models.catl_models.DownloadManager`
+  - `~sdss_catl_utils.mocks_manager.catl_utils`
+  - `~sdss_catl_utils.mocks_manager.catl_utils.check_input_params`
+  - and more.
 
 0.0.2 (2018-12-29)
 -----------------------
