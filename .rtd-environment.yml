@@ -9,7 +9,7 @@ dependencies:
   - astropy
   - Cython
   - matplotlib
-  - numpy
+  - numpy>=1.16
   - h5py
   - pandas
   - scipy
