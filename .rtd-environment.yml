@@ -9,7 +9,7 @@ dependencies:
   - astropy
   - Cython
   - matplotlib
-  - numpy>=1.16
+  - numpy
   - h5py
   - pandas
   - scipy
@@ -18,3 +18,4 @@ dependencies:
   - pip:
     - GitPython
     - cosmo-utils
+    - numpy
