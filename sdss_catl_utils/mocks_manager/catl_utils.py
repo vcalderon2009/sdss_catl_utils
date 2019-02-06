@@ -14,6 +14,7 @@ __all__        = [  'catl_keys',
                     'catl_keys_prop',
                     'catl_clean',
                     'catl_clean_nmin',
+                    'catl_prefix_path',
                     'catl_prefix_main',
                     'check_input_params']
 
@@ -22,15 +23,35 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
-# Cosmo-Utils
-from cosmo_utils.utils import file_utils      as cfutils
-from cosmo_utils.utils import file_readers    as cfreaders
-
 # Main Package
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
 from sdss_catl_utils.custom_exceptions import SDSSCatlUtils_Error
 
 ## -- Functions and classes -- ##
+
+def Program_Msg(filename):
+    """
+    Program message for `filename`
+
+    Parameters
+    ----------
+    filename : string
+        Path to the filename being used
+
+    Returns
+    ----------
+    prog_msg : string
+        String message for given `filename`
+    """
+    try:
+        assert(os.path.exists(filename))
+        # Creating message
+        prog_msg = '\n\t\t==> {} >>> '.format(os.path.basename(filename))
+    except:
+        msg = '>>> `filename` {} not found! Exiting!'.format(filename)
+        raise ValueError(msg)
+
+    return prog_msg
 
 # Catalogue keys - Main
 def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
@@ -96,7 +117,7 @@ def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
     For more information and examples, please refer to
     :ref:`quickstart_getting_started`.
     """
-    file_msg = cfutils.Program_Msg(__file__)
+    file_msg = Program_Msg(__file__)
     ## Checking input parameters
     # `catl_kind` - Value
     catl_kind_arr = ['data', 'mocks']
@@ -221,7 +242,7 @@ def catl_keys_prop(catl_kind='data', catl_info='memb', return_type='list'):
     For more information and examples, please refer to
     :ref:`quickstart_getting_started`.
     """
-    file_msg = cfutils.Program_Msg(__file__)
+    file_msg = Program_Msg(__file__)
     ## Checking input parameters
     # `catl_kind` - Value
     catl_kind_arr = ['data', 'mocks']
@@ -318,7 +339,7 @@ def catl_clean(catl_pd, catl_kind, catl_info='memb', reindex=True):
     SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
         Program exception if input parameters are `not` accepted.
     """
-    file_msg = cfutils.Program_Msg(__file__)
+    file_msg = Program_Msg(__file__)
     ## Checking input parameters
     # `catl_pd` - Type
     if not (isinstance(catl_pd, pd.DataFrame)):
@@ -449,7 +470,7 @@ def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
     with ``n > 10``.
 
     """
-    file_msg = cfutils.Program_Msg(__file__)
+    file_msg = Program_Msg(__file__)
     ## Checking input parameters
     # `catl_pd` - Type
     if not (isinstance(catl_pd, pd.DataFrame)):
@@ -534,14 +555,14 @@ def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
 
     return catl_pd_mod_nmin
 
-# Catalogue prefix of the catalogues
-def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
+# Prefix path to catalogues
+def catl_prefix_path(catl_kind=md.catl_kind, hod_n=md.hod_n,
     halotype=md.halotype, clf_method=md.clf_method, clf_seed=md.clf_seed,
     dv=md.dv, sigma_clf_c=md.sigma_clf_c, sample=md.sample, type_am=md.type_am,
     perf_opt=md.perf_opt):
     """
     Prefix of the paths based on the type of catalogues and input parameters
-    chosen.
+    chosen. It returns the typical path to the galaxy/group catalogues.
 
     Parameters
     -----------
@@ -625,7 +646,162 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
         Prefix of the paths based on the type of catalogues and input
         parameters.
     """
-    file_msg = cfutils.Program_Msg(__file__)
+    file_msg = Program_Msg(__file__)
+    ## Checking input parameters
+    # `catl_kind`
+    check_input_params(catl_kind, 'catl_kind', check_type='type')
+    check_input_params(catl_kind, 'catl_kind', check_type='vals')
+    # `hod_n`
+    check_input_params(hod_n, 'hod_n', check_type='type')
+    check_input_params(hod_n, 'hod_n', check_type='vals')
+    # `halotype`
+    check_input_params(halotype, 'halotype', check_type='type')
+    check_input_params(halotype, 'halotype', check_type='vals')
+    # `clf_method`
+    check_input_params(clf_method, 'clf_method', check_type='type')
+    check_input_params(clf_method, 'clf_method', check_type='vals')
+    # `clf_seed`
+    check_input_params(clf_seed, 'clf_seed', check_type='type')
+    # `dv`
+    check_input_params(dv, 'dv', check_type='type')
+    # `sigma_clf_c`
+    check_input_params(sigma_clf_c, 'sigma_clf_c', check_type='type')
+    # `sample`
+    check_input_params(sample, 'sample', check_type='type')
+    check_input_params(sample, 'sample', check_type='vals')
+    # `type_am`
+    check_input_params(type_am, 'type_am', check_type='type')
+    check_input_params(type_am, 'type_am', check_type='vals')
+    # `perf_opt`
+    check_input_params(perf_opt, 'perf_opt', check_type='type')
+    # Setting `perf_opt` to `False` if necessary
+    if (catl_kind == 'data'):
+        perf_opt = False
+    # Extra parameters
+    sample_Mr = 'Mr{0}'.format(sample)
+    ##
+    ## Parsing prefix path
+    # `Data`
+    if (catl_kind == 'data'):
+        catl_path_prefix = os.path.join('data',
+                                        type_am,
+                                        sample_Mr)
+    # `Mocks`
+    if (catl_kind == 'mocks'):
+        catl_path_prefix = os.path.join(
+                                'mocks',
+                                'halos_{0}'.format(halotype),
+                                'dv_{0}'.format(dv),
+                                'hod_model_{0}'.format(hod_n),
+                                'clf_seed_{0}'.format(clf_seed),
+                                'clf_method_{0}'.format(clf_method),
+                                'sigma_c_{0}'.format(sigma_clf_c),
+                                type_am,
+                                sample_Mr)
+
+    return catl_path_prefix
+
+# Catalogue prefix of the catalogues
+def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
+    halotype=md.halotype, clf_method=md.clf_method, clf_seed=md.clf_seed,
+    dv=md.dv, sigma_clf_c=md.sigma_clf_c, sample=md.sample, type_am=md.type_am,
+    perf_opt=md.perf_opt):
+    """
+    Prefix of the paths based on the type of catalogues and input parameters
+    chosen.
+
+    Parameters
+    -----------
+    catl_type : {``memb``, ``gal``, ``group``} `str`, optional
+        Type of catalog to analyze. This option is set to ``memb`` by
+        default.
+
+        Options:
+            - ``memb``: Analyzes the member galaxy catalogues of a group catalog
+            - ``gal``: Analyzes a simple galaxy catalogue
+            - ``group``: Analyzes a ``group`` galaxy catalogues with galaxy groups.
+
+    catl_kind : {``data``, ``mocks``} `str`
+        Kind of catalogues to download. This variable is set to
+        ``mocks`` by default.
+
+        Options:
+            - ``data``: Downloads the SDSS DR7 real catalogues.
+            - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
+
+    hod_n : `int`, optional
+        Number of the HOD model to use. This value is set to `0` by
+        default.
+
+    halotype : {'so', 'fof'}, `str`, optional
+        Type of dark matter definition to use. This value is set to
+        ``so`` by default.
+
+        Options:
+            - ``so``: Spherical Overdensity halo definition.
+            - ``fof``: Friends-of-Friends halo definition.
+
+    clf_method : {1, 2, 3}, `int`, optional
+        Method for assigning galaxy properties to mock galaxies.
+        This variable dictates how galaxies are assigned
+        luminosities or stellar masses based on their galaxy type
+        and host halo's mass. This variable is set to ``1`` by
+        default.
+
+        Options:
+            - ``1``: Independent assignment of (g-r) colour, sersic, and specific star formation rate (`logssfr`)
+            - ``2``: (g-r) colour dictates active/passive designation and draws values independently.
+            - ``3``: (g-r) colour dictates active/passive designation, and assigns other galaxy properties for that given galaxy.
+
+    clf_seed : `int`, optional
+        Value of the random seed used for the conditional luminosity function.
+        This variable is set to ``1235`` default.
+
+    dv : `float`, optional
+        Value for the ``velocity bias`` parameter. It is the difference
+        between the galaxy and matter velocity profiles.
+
+        .. math::
+            dv = \\frac{v_{g} - v_{c}}{v_{m} - v_{c}}
+
+        where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
+        matter velocity.
+
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
+    sample : {'19', '20', '21'}, `str`, optional
+        Luminosity of the SDSS volume-limited sample to analyze.
+        This variable is set to ``'19'`` by default.
+
+        Options:
+            - ``'19'``: :math:`M_r = 19` volume-limited sample
+            - ``'20'``: :math:`M_r = 20` volume-limited sample
+            - ``'21'``: :math:`M_r = 21` volume-limited sample
+
+    type_am : {'mr', 'mstar'}, `str`, optional
+        Type of Abundance matching used in the catalogue. This
+        variable is set to ``'mr'`` by default.
+
+        Options:
+            - ``'mr'``: Luminosity-based abundance matching used
+            - ``'mstar'``: Stellar-mass-based abundance matching used.
+
+    perf_opt : `bool`, optional
+        If `True`, it chooses to analyze the ``perfect`` version of
+        the synthetic galaxy/group galaxy catalogues. Otherwise,
+        it downloads the catalogues with group-finding errors
+        included. This variable is set to ``False`` by default.
+
+    Returns
+    ---------
+    catl_prefix : `str`
+        Prefix of the paths based on the type of catalogues and input
+        parameters.
+    """
+    file_msg = Program_Msg(__file__)
     ## Checking input parameters
     # `catl_type`
     check_input_params(catl_type, 'catl_type', check_type='type')
@@ -778,7 +954,7 @@ def check_input_params(input_var, var_name, check_type='type'):
     SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
         Program exception if input parameters are `not` accepted.
     """
-    file_msg = cfutils.Program_Msg(__file__)
+    file_msg = Program_Msg(__file__)
     ##
     ## Checking input parameters
     # `input_var` - Type
