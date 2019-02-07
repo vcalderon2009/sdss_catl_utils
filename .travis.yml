@@ -82,6 +82,10 @@ matrix:
         # - os: osx
           # env: SETUP_CMD='test'
 
+        # Try Linux
+        - os: linux
+          env: SETUP_CMD='test'
+
         # Do a coverage test.
         - os: linux
           env: SETUP_CMD='test --coverage'
