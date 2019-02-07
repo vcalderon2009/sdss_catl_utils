@@ -3,7 +3,7 @@
 
 # Victor Calderon
 # Created      : 2018_12-18
-# Last Modified: 2018_12-28
+# Last Modified: 2019-02-07
 # Vanderbilt University
 from __future__ import absolute_import, division, print_function 
 __author__     = ['Victor Calderon']
@@ -839,29 +839,20 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
             # Groups
             elif (catl_type == 'group'):
                 catl_type_str = 'group'
-    # Extra parameters
-    sample_Mr = 'Mr{0}'.format(sample)
-    ##
-    ## Parsing prefix path
-    # `Data`
-    if (catl_kind == 'data'):
-        catl_prefix = os.path.join( 'data',
-                                    type_am,
-                                    sample_Mr,
-                                    catl_type_dict[catl_type_str])
-    # `Mocks`
-    if (catl_kind == 'mocks'):
-        catl_prefix = os.path.join(
-                                'mocks',
-                                'halos_{0}'.format(halotype),
-                                'dv_{0}'.format(dv),
-                                'hod_model_{0}'.format(hod_n),
-                                'clf_seed_{0}'.format(clf_seed),
-                                'clf_method_{0}'.format(clf_method),
-                                'sigma_c_{0}'.format(sigma_clf_c),
-                                type_am,
-                                sample_Mr,
-                                catl_type_dict[catl_type_str])
+    #
+    # Parsing prefix path
+    catl_prefix = catl_prefix_path( catl_kind=catl_kind,
+                                    hod_h=hod_n,
+                                    halotype=halotype,
+                                    clf_method=clf_method,
+                                    clf_seed=clf_seed,
+                                    dv=dv,
+                                    sigma_clf_c=sigma_clf_c,
+                                    sample=sample,
+                                    type_am=type_am,
+                                    perf_opt=perf_opt)
+    
+    catl_prefix = os.path.join(catl_prefix_path, catl_type_str)
 
     return catl_prefix
 
