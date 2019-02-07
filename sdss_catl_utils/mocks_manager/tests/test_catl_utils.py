@@ -606,8 +606,8 @@ def test_check_input_params_err_key(input_var, var_name):
 
 input_arr = [
     ('data', 0, 'fof', 1, 1235, '19', 'mr', False, 'data/mr/Mr19'),
-    ('mocks', 0, 'so', 1, 0, '20', 'mr', True, 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_0/clf_method_1/sigma_c_0.1417/mr/Mr19')
-    ]
+    ('mocks', 0, 'so', 1, 0, '20', 'mr', True, 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_0/clf_method_1/sigma_c_0.1417/mr/Mr20'),
+    ('mocks', 6, 'so', 3, 10, '19', 'mr', False, 'mocks/halos_so/dv_1.0/hod_model_6/clf_seed_10/clf_method_3/sigma_c_0.1417/mr/Mr19')]
 pytest_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, sample, '
 pytest_str += 'type_am, perf_opt, expected'
 @pytest.mark.parametrize(pytest_str, input_arr)
