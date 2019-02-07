@@ -853,7 +853,7 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
                                     type_am=type_am,
                                     perf_opt=perf_opt)
 
-    catl_prefix = os.path.join(catl_prefix_mod, catl_type_str)
+    catl_prefix = os.path.join(catl_prefix_mod, catl_type_dict[catl_type_str])
 
     return catl_prefix
 
