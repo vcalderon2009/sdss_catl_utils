@@ -604,12 +604,15 @@ def test_check_input_params_err_key(input_var, var_name):
 
 #### --------------- Test `catl_prefix_path` function - Types -------------##
 
-input_arr = [('data', 0, 'fof', 1, 1235, '19', 'mr', False, 'data/mr/Mr19')]
+input_arr = [
+    ('data', 0, 'fof', 1, 1235, '19', 'mr', False, 'data/mr/Mr19'),
+    ('mocks', 0, 'so', 0, 0, '20', 'mr', True, 'mocks/halos_so/dv_1.0/hod_model_0/clf_seed_0/clf_method_0/sigma_c_0.1417/mr/Mr19')
+    ]
 pytest_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, sample, '
 pytest_str += 'type_am, perf_opt, expected'
 @pytest.mark.parametrize(input_var, input_arr)
 def test_catl_prefix_path_inputs(catl_kind, hod_n, halotype, clf_method,
-    clf_seed, sample, type_am, perf_opt, expected):
+    clf_seed, sample, type_am, pePrf_opt, expected):
     """
     Checks the function
     `~sdss_catl_utils.mocks_manager.catl_utils.catl_prefix_path` for input
