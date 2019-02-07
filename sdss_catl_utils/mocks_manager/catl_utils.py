@@ -842,7 +842,7 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
     #
     # Parsing prefix path
     catl_prefix = catl_prefix_path( catl_kind=catl_kind,
-                                    hod_h=hod_n,
+                                    hod_n=hod_n,
                                     halotype=halotype,
                                     clf_method=clf_method,
                                     clf_seed=clf_seed,
@@ -851,7 +851,7 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
                                     sample=sample,
                                     type_am=type_am,
                                     perf_opt=perf_opt)
-    
+
     catl_prefix = os.path.join(catl_prefix_path, catl_type_str)
 
     return catl_prefix
