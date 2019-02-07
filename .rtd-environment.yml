@@ -15,6 +15,7 @@ dependencies:
   - scipy
   - scikit-learn>=0.19.1
   - sphinx-astropy
+  - pip
   - pip:
     - GitPython
     - cosmo-utils>=0.1.56
