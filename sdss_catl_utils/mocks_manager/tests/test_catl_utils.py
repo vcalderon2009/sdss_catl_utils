@@ -598,3 +598,112 @@ def test_check_input_params_err_key(input_var, var_name):
     with pytest.raises(KeyError):
         catl_utils.check_input_params(input_var, var_name,
             check_type=check_type)
+
+#########-------------------------------------------------------------#########
+#########-------------------------------------------------------------#########
+
+#### --------------- Test `catl_prefix_path` function - Types -------------##
+
+input_arr = [('data', 0, 'fof', 1, 1235, '19', 'mr', False, 'data/mr/Mr19')]
+pytest_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, sample, '
+pytest_str += 'type_am, perf_opt, expected'
+@pytest.mark.parametrize(input_var, input_arr)
+def test_catl_prefix_path_inputs(catl_kind, hod_n, halotype, clf_method,
+    clf_seed, sample, type_am, perf_opt, expected):
+    """
+    Checks the function
+    `~sdss_catl_utils.mocks_manager.catl_utils.catl_prefix_path` for input
+    parameters.
+
+    Parameters
+    -------------
+    catl_kind : {``data``, ``mocks``} `str`
+        Kind of catalogues to download. This variable is set to
+        ``mocks`` by default.
+
+        Options:
+            - ``data``: Downloads the SDSS DR7 real catalogues.
+            - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
+
+    hod_n : `int`
+        Number of the HOD model to use.
+
+    halotype : {'so', 'fof'}, `str`
+        Type of dark matter definition to use.
+
+        Options:
+            - ``so``: Spherical Overdensity halo definition.
+            - ``fof``: Friends-of-Friends halo definition.
+
+    clf_method : {1, 2, 3}, `int`
+        Method for assigning galaxy properties to mock galaxies.
+        This variable dictates how galaxies are assigned
+        luminosities or stellar masses based on their galaxy type
+        and host halo's mass.
+
+        Options:
+            - ``1``: Independent assignment of (g-r) colour, sersic, and specific star formation rate (`logssfr`)
+            - ``2``: (g-r) colour dictates active/passive designation and draws values independently.
+            - ``3``: (g-r) colour dictates active/passive designation, and assigns other galaxy properties for that given galaxy.
+
+    clf_seed : `int`
+        Value of the random seed used for the conditional luminosity function.
+
+    sample : {'19', '20', '21'}, `str`
+        Luminosity of the SDSS volume-limited sample to analyze.
+
+        Options:
+            - ``'19'``: :math:`M_r = 19` volume-limited sample
+            - ``'20'``: :math:`M_r = 20` volume-limited sample
+            - ``'21'``: :math:`M_r = 21` volume-limited sample
+
+    type_am : {'mr', 'mstar'}, `str`
+        Type of Abundance matching used in the catalogue. This
+
+        Options:
+            - ``'mr'``: Luminosity-based abundance matching used
+            - ``'mstar'``: Stellar-mass-based abundance matching used.
+
+    perf_opt : `bool`
+        If `True`, it chooses to analyze the ``perfect`` version of
+        the synthetic galaxy/group galaxy catalogues. Otherwise,
+        it downloads the catalogues with group-finding errors
+        included.
+
+    expected : `str`
+        Expected `path` to the set of catalogues
+    """
+    # Output path from function `catl_prefix_path`
+    output_path = catl_utils.catl_prefix_path(  catl_kind=catl_kind,
+                                                hod_n=hod_n,
+                                                halotype=halotype,
+                                                clf_method=clf_method,
+                                                clf_seed=clf_seed,
+                                                sample=sample,
+                                                type_am=type_am,
+                                                perf_opt=perf_opt)
+    # Comparing expected with output
+    assert(output_path == expected)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
