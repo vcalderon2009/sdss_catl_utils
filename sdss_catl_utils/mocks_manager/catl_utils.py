@@ -23,35 +23,14 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 
+# Cosmo-Utils
+from cosmo_utils.utils import file_utils   as cfutils
+
 # Main Package
 from sdss_catl_utils.mocks_manager import mocks_defaults as md
 from sdss_catl_utils.custom_exceptions import SDSSCatlUtils_Error
 
 ## -- Functions and classes -- ##
-
-def Program_Msg(filename):
-    """
-    Program message for `filename`
-
-    Parameters
-    ----------
-    filename : string
-        Path to the filename being used
-
-    Returns
-    ----------
-    prog_msg : string
-        String message for given `filename`
-    """
-    try:
-        assert(os.path.exists(filename))
-        # Creating message
-        prog_msg = '\n\t\t==> {} >>> '.format(os.path.basename(filename))
-    except:
-        msg = '>>> `filename` {} not found! Exiting!'.format(filename)
-        raise ValueError(msg)
-
-    return prog_msg
 
 # Catalogue keys - Main
 def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
@@ -117,7 +96,7 @@ def catl_keys(catl_kind='data', perf_opt=False, return_type='list'):
     For more information and examples, please refer to
     :ref:`quickstart_getting_started`.
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
     # `catl_kind` - Value
     catl_kind_arr = ['data', 'mocks']
@@ -242,7 +221,7 @@ def catl_keys_prop(catl_kind='data', catl_info='memb', return_type='list'):
     For more information and examples, please refer to
     :ref:`quickstart_getting_started`.
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
     # `catl_kind` - Value
     catl_kind_arr = ['data', 'mocks']
@@ -339,7 +318,7 @@ def catl_clean(catl_pd, catl_kind, catl_info='memb', reindex=True):
     SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
         Program exception if input parameters are `not` accepted.
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
     # `catl_pd` - Type
     if not (isinstance(catl_pd, pd.DataFrame)):
@@ -470,7 +449,7 @@ def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
     with ``n > 10``.
 
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
     # `catl_pd` - Type
     if not (isinstance(catl_pd, pd.DataFrame)):
@@ -646,7 +625,7 @@ def catl_prefix_path(catl_kind=md.catl_kind, hod_n=md.hod_n,
         Prefix of the paths based on the type of catalogues and input
         parameters.
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
     # `catl_kind`
     check_input_params(catl_kind, 'catl_kind', check_type='type')
@@ -801,7 +780,7 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
         Prefix of the paths based on the type of catalogues and input
         parameters.
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
     # `catl_type`
     check_input_params(catl_type, 'catl_type', check_type='type')
@@ -954,7 +933,7 @@ def check_input_params(input_var, var_name, check_type='type'):
     SDSSCatlUtils_Error : Exception from `~sdss_catl_utils.SDSSCatlUtils_Error`
         Program exception if input parameters are `not` accepted.
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = cfutils.Program_Msg(__file__)
     ##
     ## Checking input parameters
     # `input_var` - Type
