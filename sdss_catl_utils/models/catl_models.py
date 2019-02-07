@@ -424,7 +424,6 @@ class DownloadManager(CatlClassTemplate):
         ## Catalogue prefix
         catl_prefix = catl_utils.catl_prefix_main(  catl_type=catl_type,
                                                     catl_kind=catl_kind,
-                                                    perf_opt=perf_opt,
                                                     hod_n=self.hod_n,
                                                     halotype=self.halotype,
                                                     clf_method=self.clf_method,
@@ -432,7 +431,8 @@ class DownloadManager(CatlClassTemplate):
                                                     dv=self.dv,
                                                     sigma_clf_c=self.sigma_clf_c,
                                                     sample=self.sample,
-                                                    type_am=self.type_am)
+                                                    type_am=self.type_am,
+                                                    perf_opt=perf_opt)
 
         return catl_prefix
 
