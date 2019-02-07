@@ -612,7 +612,7 @@ pytest_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, sample, '
 pytest_str += 'type_am, perf_opt, expected'
 @pytest.mark.parametrize(pytest_str, input_arr)
 def test_catl_prefix_path_inputs(catl_kind, hod_n, halotype, clf_method,
-    clf_seed, sample, type_am, pePrf_opt, expected):
+    clf_seed, sample, type_am, perf_opt, expected):
     """
     Checks the function
     `~sdss_catl_utils.mocks_manager.catl_utils.catl_prefix_path` for input
