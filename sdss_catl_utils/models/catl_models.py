@@ -1600,7 +1600,7 @@ class SDSSMLAnalysis(CatlUtils, DownloadManager):
         Examples
         ----------
         This class serves as the gateway for downloading and handling the
-        catalogues used in the `Calderon et al. (2018) <href="https://arxiv.org/abs/1712.02797">`_
+        catalogues used in the `Calderon et al. (2019) <https://arxiv.org/abs/1902.02680">`_
         analysis.
 
         One can easily *initialize* `SDSSMLAnalysis`:
@@ -1638,8 +1638,8 @@ class SDSSMLAnalysis(CatlUtils, DownloadManager):
         CatlUtils.__init__(self, **self.init_params)
         DownloadManager.__init__(self, **self.init_params)
         # Metadata about the analysis
-        # self.publications  = ['arXiv:1712.02797', 'https://doi.org/10.1093/mnras/sty2000']
-        self.github_url    = ['https://github.com/vcalderon2009/SDSS_Catl_Analysis']
+        self.publications  = ['arXiv:1902.02680']#, 'https://doi.org/10.1093/mnras/sty2000']
+        self.github_url    = ['https://github.com/vcalderon2009/SDSS_Groups_ML']
         # self.analysis_docs = ['https://galactic-conformity-in-sdss-dr7.readthedocs.io']
     
     # Dictionary of input parameters
@@ -1652,12 +1652,12 @@ class SDSSMLAnalysis(CatlUtils, DownloadManager):
         ---------
         param_dict : `dict`
             Dictionary with the initial values of ``self.param_dict``
-            for the ``SDSS Conformity (2018)`` analysis.
+            for the ``SDSS Conformity (2019)`` analysis.
         """
         param_dict = {}
         param_dict['clf_method' ] = 1
         param_dict['clf_seed'   ] = 1235
-        param_dict['halotype'   ] = 'fof'
+        param_dict['halotype'   ] = 'so'
         param_dict['hod_n'      ] = 0
         param_dict['perf_opt'   ] = False
         param_dict['sample'     ] = '19'
