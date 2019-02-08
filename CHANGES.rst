@@ -1,7 +1,7 @@
-0.0.31 (unreleased)
+0.0.31 (2019-02-08)
 -----------------------
 
-- No changes yet.
+- Added new functions to `~sdss_catl_utils.mocks_manager.catl_utils`
 
 0.0.3 (2019-01-21)
 -----------------------
