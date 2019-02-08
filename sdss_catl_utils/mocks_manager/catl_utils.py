@@ -14,6 +14,7 @@ __all__        = [  'catl_keys',
                     'catl_keys_prop',
                     'catl_clean',
                     'catl_clean_nmin',
+                    'catl_prefix_str',
                     'catl_prefix_path',
                     'catl_prefix_main',
                     'check_input_params']
@@ -533,6 +534,157 @@ def catl_clean_nmin(catl_pd, catl_kind, catl_info='memb', reindex=True,
         catl_pd_mod_nmin.reset_index(drop=True, inplace=True)
 
     return catl_pd_mod_nmin
+
+# Prefix string for the combination of input parameters for a catalog
+def catl_prefix_str(catl_kind=md.catl_kind, hod_n=md.hod_n,
+    halotype=md.halotype, clf_method=md.clf_method, clf_seed=md.clf_seed,
+    dv=md.dv, sigma_clf_c=md.sigma_clf_c, sample=md.sample, type_am=md.type_am,
+    perf_opt=md.perf_opt):
+    """
+    Prefix string for the combination of input parameters that describe
+    a set of catalog(s).
+
+    Parameters
+    -----------
+    catl_kind : {``data``, ``mocks``} `str`
+        Kind of catalogues to download. This variable is set to
+        ``mocks`` by default.
+
+        Options:
+            - ``data``: Downloads the SDSS DR7 real catalogues.
+            - ``mocks``: Downloads the synthetic catalogues of SDSS DR7.
+
+    hod_n : `int`, optional
+        Number of the HOD model to use. This value is set to `0` by
+        default.
+
+    halotype : {'so', 'fof'}, `str`, optional
+        Type of dark matter definition to use. This value is set to
+        ``so`` by default.
+
+        Options:
+            - ``so``: Spherical Overdensity halo definition.
+            - ``fof``: Friends-of-Friends halo definition.
+
+    clf_method : {1, 2, 3}, `int`, optional
+        Method for assigning galaxy properties to mock galaxies.
+        This variable dictates how galaxies are assigned
+        luminosities or stellar masses based on their galaxy type
+        and host halo's mass. This variable is set to ``1`` by
+        default.
+
+        Options:
+            - ``1``: Independent assignment of (g-r) colour, sersic, and specific star formation rate (`logssfr`)
+            - ``2``: (g-r) colour dictates active/passive designation and draws values independently.
+            - ``3``: (g-r) colour dictates active/passive designation, and assigns other galaxy properties for that given galaxy.
+
+    clf_seed : `int`, optional
+        Value of the random seed used for the conditional luminosity function.
+        This variable is set to ``1235`` default.
+
+    dv : `float`, optional
+        Value for the ``velocity bias`` parameter. It is the difference
+        between the galaxy and matter velocity profiles.
+
+        .. math::
+            dv = \\frac{v_{g} - v_{c}}{v_{m} - v_{c}}
+
+        where :math:`v_g` is the galaxy's velocity; :math:`v_m`, the
+        matter velocity.
+
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies, when being
+        assigned during the `conditional luminosity function` (CLF).
+        This variable is set to ``0.1417`` by default.
+
+    sample : {'19', '20', '21'}, `str`, optional
+        Luminosity of the SDSS volume-limited sample to analyze.
+        This variable is set to ``'19'`` by default.
+
+        Options:
+            - ``'19'``: :math:`M_r = 19` volume-limited sample
+            - ``'20'``: :math:`M_r = 20` volume-limited sample
+            - ``'21'``: :math:`M_r = 21` volume-limited sample
+
+    type_am : {'mr', 'mstar'}, `str`, optional
+        Type of Abundance matching used in the catalogue. This
+        variable is set to ``'mr'`` by default.
+
+        Options:
+            - ``'mr'``: Luminosity-based abundance matching used
+            - ``'mstar'``: Stellar-mass-based abundance matching used.
+
+    perf_opt : `bool`, optional
+        If `True`, it chooses to analyze the ``perfect`` version of
+        the synthetic galaxy/group galaxy catalogues. Otherwise,
+        it downloads the catalogues with group-finding errors
+        included. This variable is set to ``False`` by default.
+
+    Returns
+    ---------
+    catl_pre_str : `str`
+    String of the prefix for each file based on `input` parameters.
+    """
+    file_msg = cfutils.Program_Msg(__file__)
+    ## Checking input parameters
+    # `catl_kind`
+    check_input_params(catl_kind, 'catl_kind', check_type='type')
+    check_input_params(catl_kind, 'catl_kind', check_type='vals')
+    # `hod_n`
+    check_input_params(hod_n, 'hod_n', check_type='type')
+    check_input_params(hod_n, 'hod_n', check_type='vals')
+    # `halotype`
+    check_input_params(halotype, 'halotype', check_type='type')
+    check_input_params(halotype, 'halotype', check_type='vals')
+    # `clf_method`
+    check_input_params(clf_method, 'clf_method', check_type='type')
+    check_input_params(clf_method, 'clf_method', check_type='vals')
+    # `clf_seed`
+    check_input_params(clf_seed, 'clf_seed', check_type='type')
+    # `dv`
+    check_input_params(dv, 'dv', check_type='type')
+    # `sigma_clf_c`
+    check_input_params(sigma_clf_c, 'sigma_clf_c', check_type='type')
+    # `sample`
+    check_input_params(sample, 'sample', check_type='type')
+    check_input_params(sample, 'sample', check_type='vals')
+    # `type_am`
+    check_input_params(type_am, 'type_am', check_type='type')
+    check_input_params(type_am, 'type_am', check_type='vals')
+    # `perf_opt`
+    check_input_params(perf_opt, 'perf_opt', check_type='type')
+    # Setting `perf_opt` to `False` if necessary
+    if (catl_kind == 'data'):
+        perf_opt = False
+    # Extra parameters
+    sample_Mr = 'Mr{0}'.format(sample)
+    ##
+    ## Parsing prefix path
+    # `Data`
+    if (catl_kind == 'data'):
+        # List of variables to include in string
+        catl_pre_arr = ['data', sample_Mr, type_am]
+        # Prefix string
+        catl_pre_str = '{0}_{1}_am_{2}'
+        catl_pre_str = catl_pre_str.format(*catl_pre_arr)
+    # `Mocks`
+    if (catl_kind == 'mocks'):
+        # List of variables to include in string
+        catl_pre_arr = [sample_Mr,
+                        halotype,
+                        dv,
+                        hod_n,
+                        clf_seed,
+                        clf_method,
+                        sigma_clf_c,
+                        type_am,
+                        perf_opt]
+        # Prefix string
+        catl_pre_str  = '{0}_halo_{1}_dv_{2}_hn_{3}_clfs_{4}_clfm_{5}_'
+        catl_pre_str += 'sigclf_{6}_am_{7}_pf_{8}'
+        catl_pre_str  = catl_pre_str.format(*catl_pre_arr)
+
+    return catl_pre_str
 
 # Prefix path to catalogues
 def catl_prefix_path(catl_kind=md.catl_kind, hod_n=md.hod_n,
