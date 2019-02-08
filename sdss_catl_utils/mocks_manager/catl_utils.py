@@ -623,7 +623,7 @@ def catl_prefix_str(catl_kind=md.catl_kind, hod_n=md.hod_n,
     Returns
     ---------
     catl_pre_str : `str`
-    String of the prefix for each file based on `input` parameters.
+        String of the prefix for each file based on `input` parameters.
     """
     file_msg = cfutils.Program_Msg(__file__)
     ## Checking input parameters
