@@ -693,7 +693,7 @@ def test_catl_prefix_path_inputs(catl_kind, hod_n, halotype, clf_method,
 input_arr = [
     ('data', 0, 'fof', 1, 1235, '19', 'mr', False, 'data_Mr19_am_mr'),
     ('mocks', 0, 'so', 1, 0, '20', 'mr', True, 'Mr20_halo_so_dv_1.0_hn_0_clfs_0_clfm_1_sigclf_0.1417_am_mr_pf_True'),
-    ('mocks', 6, 'so', 3, 10, '19', 'mr', False, ' Mr19_halo_so_dv_1.0_hn_6_clfs_10_clfm_3_sigclf_0.1417_am_mr_pf_False')]
+    ('mocks', 6, 'so', 3, 10, '19', 'mr', False, 'Mr19_halo_so_dv_1.0_hn_6_clfs_10_clfm_3_sigclf_0.1417_am_mr_pf_False')]
 pytest_str  = 'catl_kind, hod_n, halotype, clf_method, clf_seed, sample, '
 pytest_str += 'type_am, perf_opt, expected'
 @pytest.mark.parametrize(pytest_str, input_arr)
