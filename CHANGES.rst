@@ -1,7 +1,8 @@
-0.0.32 (unreleased)
+0.0.32 (2019-02-11)
 -----------------------
 
-- No changes yet.
+- Updated function `~sdss_catl_utils.mocks_manager.models.catl_models.CatlUtils`
+  and a problem with its `catl_merge` function
 
 0.0.31 (2019-02-08)
 -----------------------
