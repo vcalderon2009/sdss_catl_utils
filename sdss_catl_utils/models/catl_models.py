@@ -1372,9 +1372,9 @@ class CatlUtils(CatlClassTemplate):
         # Column keys for catalogues
         (   gm_key,
             id_key,
-            galtype_key) = catl_keys(   self.catl_kind,
-                                        perf_opt=self.perf_opt,
-                                        return_type='list')
+            galtype_key) = catl_utils.catl_keys(self.catl_kind,
+                                                perf_opt=self.perf_opt,
+                                                return_type='list')
         # Matching keys from the group catalogue
         memb_id_unq  = np.unique(memb_pd[id_key].values)
         group_id_unq = np.unique(group_pd[id_key].values)
@@ -1388,7 +1388,7 @@ class CatlUtils(CatlClassTemplate):
             # Group galaxy catalogue
             group_pd.sort_values(by=id_key, inplace=True)
             group_pd.reset_index(drop=True, inplace=True)
-            # Reanming columns
+            # Renaming columns
             g_cols_dict = {ii: 'GG_' + ii for ii in group_cols}
             group_pd.rename(columns=g_cols_dict, inplace=True)
             group_pd.rename(columns={'GG_' + id_key: id_key}, inplace=True)
