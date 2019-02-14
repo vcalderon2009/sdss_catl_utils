@@ -675,7 +675,7 @@ class DownloadManager(CatlClassTemplate):
                     # Printing out the output directory
                     if print_outdir:
                         msg = '{0} Reading ``{1}`` and saving it to ``{2}``'
-                        msg = msg.format(file_msg, url_ii, local_ii)
+                        msg = msg.format(file_msg, url_ii_perf, local_ii_perf)
                         print(msg)
 
 ## Main Class to handle catalogues
