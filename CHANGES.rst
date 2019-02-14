@@ -1,4 +1,4 @@
-0.0.33 (unreleased)
+0.0.33 (2019-02-14)
 -----------------------
 
 - Fixed typo in `~sdss_catl_utils.models.catl_models.DownloadManager`.
