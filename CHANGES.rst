@@ -1,7 +1,7 @@
-0.0.34 (unreleased)
+0.0.34 (2019-02-24)
 -----------------------
 
-- No changes yet.
+- Added the option to add :math:`M_{r} = 18` catalogues.
 
 0.0.33 (2019-02-14)
 -----------------------
