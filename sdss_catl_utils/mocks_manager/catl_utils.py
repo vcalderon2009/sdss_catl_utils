@@ -597,11 +597,12 @@ def catl_prefix_str(catl_kind=md.catl_kind, hod_n=md.hod_n,
         assigned during the `conditional luminosity function` (CLF).
         This variable is set to ``0.1417`` by default.
 
-    sample : {'19', '20', '21'}, `str`, optional
+    sample : {'18', '19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
 
         Options:
+            - ``'18'``: :math:`M_r = 18` volume-limited sample
             - ``'19'``: :math:`M_r = 19` volume-limited sample
             - ``'20'``: :math:`M_r = 20` volume-limited sample
             - ``'21'``: :math:`M_r = 21` volume-limited sample
@@ -748,11 +749,12 @@ def catl_prefix_path(catl_kind=md.catl_kind, hod_n=md.hod_n,
         assigned during the `conditional luminosity function` (CLF).
         This variable is set to ``0.1417`` by default.
 
-    sample : {'19', '20', '21'}, `str`, optional
+    sample : {'18', '19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
 
         Options:
+            - ``'18'``: :math:`M_r = 18` volume-limited sample
             - ``'19'``: :math:`M_r = 19` volume-limited sample
             - ``'20'``: :math:`M_r = 20` volume-limited sample
             - ``'21'``: :math:`M_r = 21` volume-limited sample
@@ -903,11 +905,12 @@ def catl_prefix_main(catl_type='memb', catl_kind=md.catl_kind, hod_n=md.hod_n,
         assigned during the `conditional luminosity function` (CLF).
         This variable is set to ``0.1417`` by default.
 
-    sample : {'19', '20', '21'}, `str`, optional
+    sample : {'18', '19', '20', '21'}, `str`, optional
         Luminosity of the SDSS volume-limited sample to analyze.
         This variable is set to ``'19'`` by default.
 
         Options:
+            - ``'18'``: :math:`M_r = 18` volume-limited sample
             - ``'19'``: :math:`M_r = 19` volume-limited sample
             - ``'20'``: :math:`M_r = 20` volume-limited sample
             - ``'21'``: :math:`M_r = 21` volume-limited sample
@@ -1041,7 +1044,7 @@ def _get_input_params_dict():
                         'hod_n'        : list(range(10)),
                         'halotype'     : ['fof', 'so'],
                         'clf_method'   : [1, 2, 3],
-                        'sample'       : ['19', '20', '21'],
+                        'sample'       : ['18', '19', '20', '21'],
                         'type_am'      : ['mr', 'mstar'],
                         'cosmo_choice' : ['LasDamas', 'Planck'],
                         'catl_type'    : ['gal', 'memb', 'group']}

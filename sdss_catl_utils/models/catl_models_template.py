@@ -100,11 +100,12 @@ class CatlClassTemplate(object):
             assigned during the `conditional luminosity function` (CLF).
             This variable is set to ``0.1417`` by default.
 
-        sample : {'19', '20', '21'}, `str`, optional
+        sample : {'18', '19', '20', '21'}, `str`, optional
             Luminosity of the SDSS volume-limited sample to analyze.
             This variable is set to ``'19'`` by default.
 
             Options:
+                - ``'18'``: :math:`M_r = 18` volume-limited sample
                 - ``'19'``: :math:`M_r = 19` volume-limited sample
                 - ``'20'``: :math:`M_r = 20` volume-limited sample
                 - ``'21'``: :math:`M_r = 21` volume-limited sample
